@@ -58,7 +58,7 @@ You will need the requirements for the [IBM Blockchain Platform Extension for VS
 
 Clone this repository in a folder your choice
 ```
-git clone https://github.com/raheelzubairy/global-financing-blockchain.git
+git clone https://github.com/IBM/global-financing-blockchain.git
 ```
 
 
