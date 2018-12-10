@@ -87,6 +87,22 @@ exports.autoLoad = async function autoLoad(req, res, next) {
         // Get addressability to  contract
         const contract = await network.getContract('globalfinancing');
 
+        //get list of buyers, sellers, providers, shippers, financeCos
+        const responseBuyer = await contract.submitTransaction('GetState', "buyers");
+        let buyers = JSON.parse(responseBuyer.toString());
+                
+        const responseSeller = await contract.submitTransaction('GetState', "sellers");
+        let sellers = JSON.parse(responseSeller.toString());
+ 
+        const responseProvider = await contract.submitTransaction('GetState', "providers");
+        let providers = JSON.parse(responseProvider.toString());
+
+        const responseShipper = await contract.submitTransaction('GetState', "shippers");
+        let shippers = JSON.parse(responseShipper.toString());
+        
+        const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
+        let financeCos = JSON.parse(responseFinanceCo.toString());
+
         //iterate through the list of members in the memberList.json file        
         for (let member of startupFile.members) {
 
@@ -96,7 +112,33 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             console.log('member.pw: ' + member.pw);
 
             var transaction = 'Register' + member.type;
-            console.log('transaction: ' + transaction);
+            console.log('transaction: ' + transaction);            
+
+            for (let buyer of buyers) { 
+                if (buyer == member.id) {
+                    res.send({'error': 'member id already exists'});
+                }
+            }
+            for (let seller of sellers) { 
+                if (seller == member.id) {
+                    res.send({'error': 'member id already exists'});
+                }
+            }
+            for (let provider of providers) { 
+                if (provider == member.id) {
+                    res.send({'error': 'member id already exists'});
+                }
+            }
+            for (let shipper of shippers) { 
+                if (shipper == member.id) {
+                    res.send({'error': 'member id already exists'});
+                }
+            }
+            for (let financeCo of financeCos) { 
+                if (financeCo == member.id) {
+                    res.send({'error': 'member id already exists'});
+                }
+            }
                         
             //register a buyer, seller, provider, shipper, financeCo
             const response = await contract.submitTransaction(transaction, member.id, member.companyName);
@@ -106,11 +148,22 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             await sleep(500);
             console.log('Next');                
 
-        }                
+        } 
         
         // iterate through the order objects in the memberList.json file.
         for (let each in startupFile.items){(function(_idx, _arr){itemTable.push(_arr[_idx]);})(each, startupFile.items);}
         svc.saveItemTable(itemTable);
+
+        let allOrders = new Array();
+
+        for (let buyer of buyers) { 
+            const buyerResponse = await contract.submitTransaction('GetState', buyer);
+            var _buyerjsn = JSON.parse(buyerResponse.toString());       
+            
+            for (let orderNo of _buyerjsn.orders) {                 
+                allOrders.push(orderNo);            
+            }                           
+        }
 
         for (let order of startupFile.assets) {
 
@@ -125,6 +178,12 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             console.log('items: ' + items);
             console.log('amount: ' + amount);
 
+            for (let orderNo of allOrders) { 
+                if (orderNo == order.id) {
+                    res.send({'error': 'member id already exists'});
+                }
+            }            
+
             const createOrderResponse = await contract.submitTransaction('CreateOrder', order.buyer, order.seller, financeCoID, order.id, items, amount);
             console.log('createOrderResponse: ')
             console.log(JSON.parse(createOrderResponse.toString()));
@@ -132,12 +191,12 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             await sleep(500);
             console.log('Next');
                       
-        }
+        }       
 
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
-        res.send({'error': error.stack});
+        res.send({'error': error.message});
     } finally {
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');

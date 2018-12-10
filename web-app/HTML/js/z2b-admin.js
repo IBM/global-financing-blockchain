@@ -46,8 +46,16 @@ function preLoad()
     $.when($.post('/setup/autoLoad', options)).done(function (_results)
     { 
         hideLoad();
-        console.log('Autoload Initiated'); 
-        $('#body').append('<h2>Autoload Initiated</h2>'); 
+        if (_results.result === 'Success')
+        {
+            console.log('success'); 
+            $('#body').append('<h2>Autoload Successful</h2>'); 
+        } else {
+            console.log('error'); 
+            console.log(_results);
+            $('#body').append('<h4>' + _results.error + '</h4>');             
+        }
+        
     });
 }
 
@@ -187,12 +195,6 @@ function displayMember(id, _list)
  */
 function findMember(_id, _list)
 {
-    console.log('_id: ');
-    console.log(_id);
-
-    console.log('_list: ');
-    console.log(_list);
-
     let _mem = {'id': _id, 'companyName': 'not found'};
     for (let each in _list){(function(_idx, _arr)
     {

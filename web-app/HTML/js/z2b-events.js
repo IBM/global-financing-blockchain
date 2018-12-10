@@ -26,27 +26,30 @@ function singleUX ()
     console.log('singleUX');
     let toLoad = 'singleUX.html';
     if ((typeof(buyers) === 'undefined') || (buyers === null) || (buyers.length === 0))
-    { $.when($.get(toLoad), deferredMemberLoad()).done(function (_page, _res)
+    { 
+        showLoad();
+        $.when($.get(toLoad), deferredMemberLoad()).done(function (_page, _res)
         {
-        $('#body').empty();
-        $('#body').append(_page);
-        loadBuyerUX();
-        loadSellerUX();
-        loadProviderUX();
-        loadShipperUX();
-        console.log('singleUX1');
-    });
-    }
-    else{
-        $.when($.get(toLoad)).done(function(_page)
-        {
+            hideLoad();
             $('#body').empty();
             $('#body').append(_page);
             loadBuyerUX();
             loadSellerUX();
             loadProviderUX();
             loadShipperUX();
-            console.log('singleUX2');
+        });
+    }
+    else{
+        showLoad();
+        $.when($.get(toLoad)).done(function(_page)
+        {
+            hideLoad();
+            $('#body').empty();
+            $('#body').append(_page);
+            loadBuyerUX();
+            loadSellerUX();
+            loadProviderUX();
+            loadShipperUX();
         });
     }
 }
@@ -277,18 +280,14 @@ function wsConnect()
 }
 
 
-function showLoad() {
-    
-    console.log('showLoad');
-    //e.preventDefault();
+function showLoad() {    
     $("#loadMe").modal({
-    backdrop: "static", //remove ability to close modal with click
-    keyboard: false, //remove option to close with keyboard
-    show: true //Display loader!
+        backdrop: "static", //remove ability to close modal with click
+        keyboard: false, //remove option to close with keyboard
+        show: true //Display loader!
     });          
 }
 
 function hideLoad() {
-    console.log('hideLoad');
     $("#loadMe").modal("hide");    
 }

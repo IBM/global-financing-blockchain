@@ -57,7 +57,6 @@ function loadShipperUXFull ()
  */
 function setupShipper(page)
 {
-    console.log('setupShipper');
     $('#shipperbody').empty();
     $('#shipperbody').append(page);
     if (sh_alerts.length === 0)
@@ -87,7 +86,6 @@ function setupShipper(page)
 
 function setupShipperFull(page, port)
 {
-    console.log('setupShipperFull');
     $('#body').empty();
     $('#body').append(page);
     if (sh_alerts.length === 0)
