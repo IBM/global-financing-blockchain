@@ -28,7 +28,6 @@ let totalAmount = 0;
  */
 function loadBuyerUX ()
 {   
-    console.log('loadBuyerUX');
     // get the html page to load
     let toLoad = 'buyer.html';
     // if (buyers.length === 0) then autoLoad() was not successfully run before this web app starts, so the sie of the buyer list is zero
@@ -47,7 +46,6 @@ function loadBuyerUX ()
 
 function loadBuyerUXFull ()
 {
-    console.log('loadBuyerUXFull');
     // get the html page to load
     let toLoad = 'buyer.html';
     // if (buyers.length === 0) then autoLoad() was not successfully run before this web app starts, so the sie of the buyer list is zero
@@ -65,7 +63,6 @@ function loadBuyerUXFull ()
    
 function setupBuyer(page)
 {
-    console.log('setupBuyer');
     // empty the hetml element that will hold this page
     $('#buyerbody').empty();
     $('#buyerbody').append(page);
@@ -112,7 +109,6 @@ function setupBuyer(page)
 
 function setupBuyerFull(page)
 {
-    console.log('setupBuyerFull');
     // empty the hetml element that will hold this page
     $('#body').empty();
     $('#body').append(page);

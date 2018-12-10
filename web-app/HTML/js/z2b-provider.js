@@ -86,7 +86,6 @@ function setupProvider(page)
 
 function setupProviderFull(page)
   {
-    console.log('setupProviderFull');
     $('#body').empty();
     $('#body').append(page);
     if (p_alerts.length === 0)
