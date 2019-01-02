@@ -1,7 +1,7 @@
 {
     "name": "globalfinancing",
     "version": "0.0.1",
-    "description": "My Smart Contract",
+    "description": "Global Financing Contract",
     "main": "index.js",
     "engines": {
         "node": ">=8",
@@ -11,10 +11,10 @@
         "start": "fabric-chaincode-node start"
     },
     "engineStrict": true,
-    "author": "John Doe",
+    "author": "Raheel Zubairy",
     "license": "Apache-2.0",
     "dependencies": {
-        "fabric-contract-api": "1.4.0-beta",
-        "fabric-shim": "1.4.0-beta"
+        "fabric-contract-api": "1.4.0-beta2",
+        "fabric-shim": "1.4.0-beta2"
     }
 }

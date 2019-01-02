@@ -135,43 +135,14 @@ Type in `instantiate` for the function:
 
 You can press **Enter** for optional arguments.  
 
-Once this is successfully instantiated, you should see the contract in your Blockchain Connection with all the contract functions:
-
-<p align="center">
-  <img height="500" src="docs/doc-images/instantiated-contract-functions.png">
-</p>
-
-You can directly submit transactions from here. Once you have reviewed the contract, you can try out the transactions directly to register participants and try out functions to update the order.
+Once this is successfully instantiated, you should see a successful notification in the output view.
 
 ## 3. Run the application
 
-Before running the application, you need to update the ports in the [network-vs.yaml](web-app/controller/restapi/features/fabric/network-vs.yaml) file.
-
-* First in your terminal, type in `docker ps`. This will display your Docker containers:
-
-<p align="center">
-  <img src="docs/doc-images/docker-containers.png">
-</p>
-
-* Update the [network-vs.yaml](web-app/controller/restapi/features/fabric/network-vs.yaml) file with the ports for the peers, orderer, and certificate-authority:
-
-<p align="center">
-  <img width="500" src="docs/doc-images/update-peers-port.png">
-</p>
-
-<p align="center">
-  <img width="300" src="docs/doc-images/update-orderers-port.png">
-</p>
-
-<p align="center">
-  <img width="300" src="docs/doc-images/update-ca-port.png">
-</p>
-
-
-* In a terminal, navigate to the `web-app` directory:
+In a new terminal, navigate to the `web-app` directory:
 
   ```bash
-  cd web-app/
+  cd global-financing-blockchain/web-app/
   ```
 
   Build the node dependencies:
