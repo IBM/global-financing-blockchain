@@ -1,6 +1,6 @@
 # Global financing with blockchain
 
-The Global Finance application using blockchain technology tracks actions on an order by the the various members of a network -- buyer, seller, provider, shipper, and finance company. These actions include:
+The Global Finance application using blockchain technology tracks actions on an order by the various members of a network -- buyer, seller, provider, shipper, and finance company. These actions include:
 
 * Buyer creates the order
 * Seller contacts a provider for the items
