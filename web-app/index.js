@@ -27,26 +27,12 @@ const bodyParser = require('body-parser');
 const cfenv = require('cfenv');
 
 const cookieParser = require('cookie-parser');
-// const session = require('express-session');
 
-// const vcapServices = require('vcap_services');
-// const uuid = require('uuid');
-//const env = require('./controller/envV2.json');
 const sessionSecret = {};
 const appEnv = cfenv.getAppEnv();
 const app = express();
 const busboy = require('connect-busboy');
 app.use(busboy());
-
-// the session secret is a text string of arbitrary length which is
-//  used to encode and decode cookies sent between the browser and the server
-/**
-for information on how to enable https support in osx, go here:
-  https://gist.github.com/nrollr/4daba07c67adcb30693e
-openssl genrsa -out key.pem
-openssl req -new -key key.pem -out csr.pem
-openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
-**/
 
 app.use(cookieParser(sessionSecret));
 

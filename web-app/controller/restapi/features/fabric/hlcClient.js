@@ -21,13 +21,16 @@ let itemTable = null;
 const svc = require('./Z2B_Services');
 const financeCoID = 'easymoney@easymoneyinc.com';
 
-// Bring key classes into scope, most importantly Fabric SDK network class
-const yaml = require('js-yaml');
+// Bring Fabric SDK network class
 const { FileSystemWallet, Gateway } = require('fabric-network');
 
 // A wallet stores a collection of identities for use
 let walletDir = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric/_idwallet');
 const wallet = new FileSystemWallet(walletDir);
+
+const ccpPath = path.resolve(__dirname, 'connection.json');
+const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+const ccp = JSON.parse(ccpJSON);
 
 
 /**
@@ -47,60 +50,47 @@ exports.getMyOrders = async function (req, res, next) {
     console.log(method+' req.body.userID is: '+req.body.userID );
     let allOrders = new Array();
 
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
-
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
 
-        // Get addressability to  contract
+        // Get addressability to contract
         const contract = await network.getContract('globalfinancing');
 
+        // Get member state
         const responseMember = await contract.submitTransaction('GetState', req.body.userID);
         console.log('responseMember: ');
         console.log(JSON.parse(responseMember.toString()));
-        let member = JSON.parse(responseMember.toString());
+        let member = JSON.parse(JSON.parse(responseMember.toString()))
 
+        // Get the orders for the member including their state
         for (let orderNo of member.orders) { 
             const response = await contract.submitTransaction('GetState', orderNo);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
-            var _jsn = JSON.parse(response.toString());
+            var _jsn = JSON.parse(JSON.parse(response.toString()));
             var _jsnItems = JSON.parse(_jsn.items);
             _jsn.items = _jsnItems;
             allOrders.push(_jsn);            
         }
+
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('getMyOrders Complete');
+        await gateway.disconnect();
+        res.send({'result': 'success', 'orders': allOrders});
         
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.stack});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('getMyOrders Complete');
-        gateway.disconnect();
-        res.send({'result': 'success', 'orders': allOrders});
-    }
+    } 
 };
 
 
@@ -152,27 +142,12 @@ exports.orderAction = async function (req, res, next) {
     }
     if (svc.m_connection === null) {svc.createMessageSocket();}
 
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
-
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
@@ -180,12 +155,14 @@ exports.orderAction = async function (req, res, next) {
         // Get addressability to  contract
         const contract = await network.getContract('globalfinancing');
 
+
+        // Get state of order
         const responseOrder = await contract.submitTransaction('GetState', req.body.orderNo);
         console.log('responseOrder: ');
         console.log(JSON.parse(responseOrder.toString()));
-        let order = JSON.parse(responseOrder.toString());
+        let order = JSON.parse(JSON.parse(responseOrder.toString()));
         
-        //order.status = req.body.action;
+        // Perform action on the order
         switch (req.body.action)
         {
         case 'Pay':
@@ -270,19 +247,19 @@ exports.orderAction = async function (req, res, next) {
         default :
             console.log('default entered for action: '+req.body.action);
             res.send({'result': 'failed', 'error':' order '+req.body.orderNo+' unrecognized request: '+req.body.action});
-        }                
+        }
+        
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('orderAction Complete');
+        await gateway.disconnect();
+        res.send({'result': ' order '+req.body.orderNo+' successfully updated to '+req.body.action});
             
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.stack});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('orderAction Complete');
-        gateway.disconnect();
-        res.send({'result': ' order '+req.body.orderNo+' successfully updated to '+req.body.action});
-    }
+    } 
 
 };
 
@@ -304,27 +281,12 @@ exports.addOrder = async function (req, res, next) {
     let orderNo = req.body.buyer.replace(/@/, '').replace(/\./, '')+ts;
     if (svc.m_connection === null) {svc.createMessageSocket();}
 
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
-
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
@@ -349,17 +311,17 @@ exports.addOrder = async function (req, res, next) {
         console.log('createOrderResponse: ')
         console.log(JSON.parse(createOrderResponse.toString()));
 
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('addOrder Complete');
+        await gateway.disconnect();
+        res.send({'result': ' order '+orderNo+' successfully added'});
+
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.stack});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('addOrder Complete');
-        gateway.disconnect();
-        res.send({'result': ' order '+orderNo+' successfully added'});
-    }
+    } 
     
 };
 

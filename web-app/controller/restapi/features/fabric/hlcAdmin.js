@@ -14,16 +14,20 @@
 
 
 'use strict';
+
 const fs = require('fs');
 const path = require('path');
 
-// Bring key classes into scope, most importantly Fabric SDK network class
-const yaml = require('js-yaml');
+// Bring Fabric SDK network class
 const { FileSystemWallet, Gateway } = require('fabric-network');
 
 // A wallet stores a collection of identities for use
 let walletDir = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric/_idwallet');
 const wallet = new FileSystemWallet(walletDir);
+
+const ccpPath = path.resolve(__dirname, 'connection.json');
+const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+const ccp = JSON.parse(ccpJSON);
 
 
 /**
@@ -63,27 +67,12 @@ exports.getMembers = async function(req, res, next) {
     let allMembers = new Array();
     let members;
 
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
-
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
@@ -93,59 +82,60 @@ exports.getMembers = async function(req, res, next) {
                 
         switch (req.body.registry)
         {
-        case 'Buyer':
-            const responseBuyer = await contract.submitTransaction('GetState', "buyers");
-            console.log('responseBuyer: ');
-            console.log(JSON.parse(responseBuyer.toString()));
-            members = JSON.parse(responseBuyer.toString());
-            break;            
-        case 'Seller':
-            const responseSeller = await contract.submitTransaction('GetState', "sellers");
-            console.log('responseSeller: ');
-            console.log(JSON.parse(responseSeller.toString()));
-            members = JSON.parse(responseSeller.toString());
-            break;
-        case 'Provider':
-            const responseProvider = await contract.submitTransaction('GetState', "providers");
-            console.log('responseProvider: ');
-            console.log(JSON.parse(responseProvider.toString()));
-            members = JSON.parse(responseProvider.toString());
-            break; 
-        case 'Shipper':
-            const responseShipper = await contract.submitTransaction('GetState', "shippers");
-            console.log('responseShipper: ');
-            console.log(JSON.parse(responseShipper.toString()));
-            members = JSON.parse(responseShipper.toString());
-            break; 
-        case 'FinanceCo':
-            const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
-            console.log('responseFinanceCo: ');
-            console.log(JSON.parse(responseFinanceCo.toString()));
-            members = JSON.parse(responseFinanceCo.toString());
-            break; 
-        default:
-            res.send({'error': 'body registry not found'});
+            case 'Buyer':
+                const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
+                console.log('responseBuyer: ');
+                console.log(JSON.parse(responseBuyer.toString()));
+                members = JSON.parse(JSON.parse(responseBuyer.toString()));
+                break;            
+            case 'Seller':
+                const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
+                console.log('responseSeller: ');
+                console.log(JSON.parse(responseSeller.toString()));
+                members = JSON.parse(JSON.parse(responseSeller.toString()));
+                break;
+            case 'Provider':
+                const responseProvider = await contract.evaluateTransaction('GetState', "providers");
+                console.log('responseProvider: ');
+                console.log(JSON.parse(responseProvider.toString()));
+                members = JSON.parse(JSON.parse(responseProvider.toString()));
+                break; 
+            case 'Shipper':
+                const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
+                console.log('responseShipper: ');
+                console.log(JSON.parse(responseShipper.toString()));
+                members = JSON.parse(JSON.parse(responseShipper.toString()));                
+                break; 
+            case 'FinanceCo':
+                const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
+                console.log('responseFinanceCo: ');
+                console.log(JSON.parse(responseFinanceCo.toString()));
+                members = JSON.parse(JSON.parse(responseFinanceCo.toString()));
+                break; 
+            default:
+                res.send({'error': 'body registry not found'});
         }
         
-        for (let member of members) { 
+        // Get state of the members
+        for (const member of members) { 
             const response = await contract.submitTransaction('GetState', member);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
-            var _jsn = JSON.parse(response.toString());                       
+            var _jsn = JSON.parse(JSON.parse(response.toString()));                       
             allMembers.push(_jsn); 
         }
-        
+
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('getMembers Complete');
+        await gateway.disconnect();
+        res.send({'result': 'success', 'members': allMembers});
+                
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.stack});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('getMembers Complete');
-        gateway.disconnect();
-        res.send({'result': 'success', 'members': allMembers});
-    }
+    } 
          
 };
 
@@ -166,26 +156,12 @@ exports.getAssets = async function(req, res, next) {
     console.log('getAssets');
     let allOrders = new Array();
 
-    const gateway = new Gateway();
-
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
@@ -196,37 +172,36 @@ exports.getAssets = async function(req, res, next) {
         const responseBuyer = await contract.submitTransaction('GetState', "buyers");
         console.log('responseBuyer: ');
         console.log(JSON.parse(responseBuyer.toString()));
-        var buyers = JSON.parse(responseBuyer.toString());
+        var buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
 
         for (let buyer of buyers) { 
             const buyerResponse = await contract.submitTransaction('GetState', buyer);
             console.log('response: ');
             console.log(JSON.parse(buyerResponse.toString()));
-            var _buyerjsn = JSON.parse(buyerResponse.toString());       
+            var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
             
             for (let orderNo of _buyerjsn.orders) { 
                 const response = await contract.submitTransaction('GetState', orderNo);
                 console.log('response: ');
                 console.log(JSON.parse(response.toString()));
-                var _jsn = JSON.parse(response.toString());
+                var _jsn = JSON.parse(JSON.parse(response.toString()));
                 var _jsnItems = JSON.parse(_jsn.items);
                 _jsn.items = _jsnItems;
                 allOrders.push(_jsn);            
             }                           
-        }        
+        }
+        
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('getAssets Complete');
+        await gateway.disconnect();
+        res.send({'result': 'success', 'orders': allOrders});
         
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.stack});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('getAssets Complete');
-        gateway.disconnect();
-        res.send({'result': 'success', 'orders': allOrders});
-    }
- 
+    } 
 };
 
 
@@ -246,27 +221,12 @@ exports.addMember = async function(req, res, next) {
     console.log('addMember');
     let members;
 
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
-
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));        
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
@@ -276,28 +236,28 @@ exports.addMember = async function(req, res, next) {
 
         switch (req.body.type)
         {
-        case 'Buyer':
-            const responseBuyer = await contract.submitTransaction('GetState', "buyers");
-            members = JSON.parse(responseBuyer.toString());
-            break;            
-        case 'Seller':
-            const responseSeller = await contract.submitTransaction('GetState', "sellers");
-            members = JSON.parse(responseSeller.toString());
-            break;
-        case 'Provider':
-            const responseProvider = await contract.submitTransaction('GetState', "providers");
-            members = JSON.parse(responseProvider.toString());
-            break; 
-        case 'Shipper':
-            const responseShipper = await contract.submitTransaction('GetState', "shippers");
-            members = JSON.parse(responseShipper.toString());
-            break; 
-        case 'FinanceCo':
-            const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
-            members = JSON.parse(responseFinanceCo.toString());
-            break; 
-        default:
-            res.send({'error': 'body type not found'});
+            case 'Buyer':
+                const responseBuyer = await contract.submitTransaction('GetState', "buyers");
+                members = JSON.parse(JSON.parse(responseBuyer.toString()));
+                break;            
+            case 'Seller':
+                const responseSeller = await contract.submitTransaction('GetState', "sellers");
+                members = JSON.parse(JSON.parse(responseSeller.toString()));
+                break;
+            case 'Provider':
+                const responseProvider = await contract.submitTransaction('GetState', "providers");
+                members = JSON.parse(JSON.parse(responseProvider.toString()));
+                break; 
+            case 'Shipper':
+                const responseShipper = await contract.submitTransaction('GetState', "shippers");
+                members = JSON.parse(JSON.parse(responseShipper.toString()));
+                break; 
+            case 'FinanceCo':
+                const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
+                members = JSON.parse(JSON.parse(responseFinanceCo.toString()));
+                break; 
+            default:
+                res.send({'error': 'body type not found'});
         }
 
         for (let member of members) { 
@@ -317,19 +277,18 @@ exports.addMember = async function(req, res, next) {
         const response = await contract.submitTransaction(transaction, req.body.id, req.body.companyName);
         console.log('transaction response: ')
         console.log(JSON.parse(response.toString()));  
+
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('AutoLoad Complete');
+        await gateway.disconnect();
+        res.send(req.body.companyName+' successfully added');
    
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.stack});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('AutoLoad Complete');
-        gateway.disconnect();
-        res.send(req.body.companyName+' successfully added')
-    }
-
+    } 
     
 };
 

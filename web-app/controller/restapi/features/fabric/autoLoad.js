@@ -24,13 +24,16 @@
 const fs = require('fs');
 const path = require('path');
 
-// Bring key classes into scope, most importantly Fabric SDK network class
-const yaml = require('js-yaml');
+// Bring Fabric SDK network class
 const { FileSystemWallet, Gateway } = require('fabric-network');
 
 // A wallet stores a collection of identities for use
 let walletDir = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric/_idwallet');
 const wallet = new FileSystemWallet(walletDir);
+
+const ccpPath = path.resolve(__dirname, 'connection.json');
+const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+const ccp = JSON.parse(ccpJSON);
 
 const financeCoID = 'easymoney@easymoneyinc.com';
 const svc = require('./Z2B_Services');
@@ -57,29 +60,14 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
     // get the autoload file
     let newFile = path.join(path.dirname(require.main.filename),'startup','memberList.json');
-    let startupFile = JSON.parse(fs.readFileSync(newFile));    
-
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
+    let startupFile = JSON.parse(fs.readFileSync(newFile));        
 
     // Main try/catch block
     try {
 
-        // define the identity to use
-        const identityLabel = 'User1@org1.example.com';
-
-        // Load connection profile; will be used to locate a gateway
-        let yamlFile = path.join(path.dirname(require.main.filename),'controller/restapi/features/fabric','network-vs.yaml');
-        let connectionProfile = yaml.safeLoad(fs.readFileSync(yamlFile, 'utf8'));        
-
-        // Set connection options; use 'admin' identity from application wallet
-        let connectionOptions = {
-            identity: identityLabel,
-            wallet: wallet
-        };
-
-        // Connect to gateway using application specified parameters
-        await gateway.connect(connectionProfile, connectionOptions);
+        // A gateway defines the peers used to access Fabric networks
+        const gateway = new Gateway();
+        await gateway.connect(ccp, { wallet, identity: 'User1@org1.example.com', discovery: { enabled: false } });
 
         // Get addressability to network
         const network = await gateway.getNetwork('mychannel');
@@ -89,19 +77,19 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
         //get list of buyers, sellers, providers, shippers, financeCos
         const responseBuyer = await contract.submitTransaction('GetState', "buyers");
-        let buyers = JSON.parse(responseBuyer.toString());
+        let buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
                 
         const responseSeller = await contract.submitTransaction('GetState', "sellers");
-        let sellers = JSON.parse(responseSeller.toString());
+        let sellers = JSON.parse(JSON.parse(responseSeller.toString()));
  
         const responseProvider = await contract.submitTransaction('GetState', "providers");
-        let providers = JSON.parse(responseProvider.toString());
+        let providers = JSON.parse(JSON.parse(responseProvider.toString()));
 
         const responseShipper = await contract.submitTransaction('GetState', "shippers");
-        let shippers = JSON.parse(responseShipper.toString());
+        let shippers = JSON.parse(JSON.parse(responseShipper.toString()));
         
         const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
-        let financeCos = JSON.parse(responseFinanceCo.toString());
+        let financeCos = JSON.parse(JSON.parse(responseFinanceCo.toString()));
 
         //iterate through the list of members in the memberList.json file        
         for (let member of startupFile.members) {
@@ -144,8 +132,7 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             const response = await contract.submitTransaction(transaction, member.id, member.companyName);
             console.log('transaction response: ')
             console.log(JSON.parse(response.toString()));  
-                                               
-            await sleep(500);
+                                            
             console.log('Next');                
 
         } 
@@ -156,15 +143,17 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
         let allOrders = new Array();
 
+        console.log('Get all orders'); 
         for (let buyer of buyers) { 
             const buyerResponse = await contract.submitTransaction('GetState', buyer);
-            var _buyerjsn = JSON.parse(buyerResponse.toString());       
+            var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
             
             for (let orderNo of _buyerjsn.orders) {                 
                 allOrders.push(orderNo);            
             }                           
         }
 
+        console.log('Go through all orders'); 
         for (let order of startupFile.assets) {
 
             let _tmp = svc.addItems(order, itemTable);
@@ -180,7 +169,7 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
             for (let orderNo of allOrders) { 
                 if (orderNo == order.id) {
-                    res.send({'error': 'member id already exists'});
+                    res.send({'error': 'order already exists'});
                 }
             }            
 
@@ -188,24 +177,20 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             console.log('createOrderResponse: ')
             console.log(JSON.parse(createOrderResponse.toString()));
 
-            await sleep(500);
             console.log('Next');
                       
-        }       
+        }
+        
+        // Disconnect from the gateway
+        console.log('Disconnect from Fabric gateway.');
+        console.log('AutoLoad Complete');
+        await gateway.disconnect();
+        res.send({'result': 'Success'});
 
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
         res.send({'error': error.message});
-    } finally {
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        console.log('AutoLoad Complete');
-        gateway.disconnect();
-        res.send({'result': 'Success'});
     }
-};
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+};
