@@ -118,7 +118,7 @@ exports.getMembers = async function(req, res, next) {
         
         // Get state of the members
         for (const member of members) { 
-            const response = await contract.submitTransaction('GetState', member);
+            const response = await contract.evaluateTransaction('GetState', member);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
             var _jsn = JSON.parse(JSON.parse(response.toString()));                       
@@ -169,19 +169,19 @@ exports.getAssets = async function(req, res, next) {
         // Get addressability to  contract
         const contract = await network.getContract('globalfinancing');
         
-        const responseBuyer = await contract.submitTransaction('GetState', "buyers");
+        const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
         console.log('responseBuyer: ');
         console.log(JSON.parse(responseBuyer.toString()));
         var buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
 
         for (let buyer of buyers) { 
-            const buyerResponse = await contract.submitTransaction('GetState', buyer);
+            const buyerResponse = await contract.evaluateTransaction('GetState', buyer);
             console.log('response: ');
             console.log(JSON.parse(buyerResponse.toString()));
             var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
             
             for (let orderNo of _buyerjsn.orders) { 
-                const response = await contract.submitTransaction('GetState', orderNo);
+                const response = await contract.evaluateTransaction('GetState', orderNo);
                 console.log('response: ');
                 console.log(JSON.parse(response.toString()));
                 var _jsn = JSON.parse(JSON.parse(response.toString()));
@@ -237,23 +237,23 @@ exports.addMember = async function(req, res, next) {
         switch (req.body.type)
         {
             case 'Buyer':
-                const responseBuyer = await contract.submitTransaction('GetState', "buyers");
+                const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
                 members = JSON.parse(JSON.parse(responseBuyer.toString()));
                 break;            
             case 'Seller':
-                const responseSeller = await contract.submitTransaction('GetState', "sellers");
+                const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
                 members = JSON.parse(JSON.parse(responseSeller.toString()));
                 break;
             case 'Provider':
-                const responseProvider = await contract.submitTransaction('GetState', "providers");
+                const responseProvider = await contract.evaluateTransaction('GetState', "providers");
                 members = JSON.parse(JSON.parse(responseProvider.toString()));
                 break; 
             case 'Shipper':
-                const responseShipper = await contract.submitTransaction('GetState', "shippers");
+                const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
                 members = JSON.parse(JSON.parse(responseShipper.toString()));
                 break; 
             case 'FinanceCo':
-                const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
+                const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
                 members = JSON.parse(JSON.parse(responseFinanceCo.toString()));
                 break; 
             default:

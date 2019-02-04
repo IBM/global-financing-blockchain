@@ -6,5 +6,4 @@
 
 const MyContract = require('./lib/globalFinance.js');
 
-//module.exports.MyContract = MyContract;
 module.exports.contracts = [ MyContract ];

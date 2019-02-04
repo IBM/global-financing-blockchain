@@ -64,14 +64,14 @@ exports.getMyOrders = async function (req, res, next) {
         const contract = await network.getContract('globalfinancing');
 
         // Get member state
-        const responseMember = await contract.submitTransaction('GetState', req.body.userID);
+        const responseMember = await contract.evaluateTransaction('GetState', req.body.userID);
         console.log('responseMember: ');
         console.log(JSON.parse(responseMember.toString()));
         let member = JSON.parse(JSON.parse(responseMember.toString()))
 
         // Get the orders for the member including their state
         for (let orderNo of member.orders) { 
-            const response = await contract.submitTransaction('GetState', orderNo);
+            const response = await contract.evaluateTransaction('GetState', orderNo);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
             var _jsn = JSON.parse(JSON.parse(response.toString()));
@@ -157,7 +157,7 @@ exports.orderAction = async function (req, res, next) {
 
 
         // Get state of order
-        const responseOrder = await contract.submitTransaction('GetState', req.body.orderNo);
+        const responseOrder = await contract.evaluateTransaction('GetState', req.body.orderNo);
         console.log('responseOrder: ');
         console.log(JSON.parse(responseOrder.toString()));
         let order = JSON.parse(JSON.parse(responseOrder.toString()));

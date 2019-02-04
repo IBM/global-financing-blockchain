@@ -76,19 +76,19 @@ exports.autoLoad = async function autoLoad(req, res, next) {
         const contract = await network.getContract('globalfinancing');
 
         //get list of buyers, sellers, providers, shippers, financeCos
-        const responseBuyer = await contract.submitTransaction('GetState', "buyers");
+        const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
         let buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
                 
-        const responseSeller = await contract.submitTransaction('GetState', "sellers");
+        const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
         let sellers = JSON.parse(JSON.parse(responseSeller.toString()));
  
-        const responseProvider = await contract.submitTransaction('GetState', "providers");
+        const responseProvider = await contract.evaluateTransaction('GetState', "providers");
         let providers = JSON.parse(JSON.parse(responseProvider.toString()));
 
-        const responseShipper = await contract.submitTransaction('GetState', "shippers");
+        const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
         let shippers = JSON.parse(JSON.parse(responseShipper.toString()));
         
-        const responseFinanceCo = await contract.submitTransaction('GetState', "financeCos");
+        const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
         let financeCos = JSON.parse(JSON.parse(responseFinanceCo.toString()));
 
         //iterate through the list of members in the memberList.json file        
@@ -145,7 +145,7 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
         console.log('Get all orders'); 
         for (let buyer of buyers) { 
-            const buyerResponse = await contract.submitTransaction('GetState', buyer);
+            const buyerResponse = await contract.evaluateTransaction('GetState', buyer);
             var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
             
             for (let orderNo of _buyerjsn.orders) {                 
