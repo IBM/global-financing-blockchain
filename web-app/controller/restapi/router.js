@@ -24,6 +24,7 @@ let resources = require('./features/resources');
 let hlcAdmin = require('./features/fabric/hlcAdmin');
 let hlcClient = require('./features/fabric/hlcClient');
 let setup = require('./features/fabric/autoLoad');
+let blockchain = require('./features/fabric/getBlockchain');
 
 router.post('/setup/autoLoad*', setup.autoLoad);
 
@@ -58,6 +59,8 @@ router.post('/api/selectedPrompts*',multi_lingual.prompts);
 
 router.get('/resources/getDocs*',resources.getDocs);
 router.get('/resources/getEducation*',resources.getEducation);
+
+router.post('/fabric/getBlockchain', blockchain.getBlockchain);
 
 router.get('/fabric/admin/getRegistries*', hlcAdmin.getRegistries);
 router.post('/fabric/admin/getMembers*', hlcAdmin.getMembers);

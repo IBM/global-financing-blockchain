@@ -485,3 +485,19 @@ tr.hideRow {display: none;}
 .glyphicon-thumbs-up, .ok {background: #00FF00; font-size: 1.5em;}
 .glyphicon-thumbs-down, .fail {background: #FF0000; font-size: 1.5em;}
 .glyphicon-warning-sign, .warn {background: #FFFF00; font-size: 1.5em;}
+
+.showBlock {
+	background-color: rgb(0, 255, 170);
+}
+
+.showTransactions p {
+	margin: 0px;
+}
+
+.showWrites {
+	margin-bottom: 10px;
+}
+
+.showWrites p {
+	margin: 0px;
+}

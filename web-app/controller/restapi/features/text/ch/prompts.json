@@ -12,7 +12,8 @@
     "idx_roles":"角色",
     "idx_admin":"管理员",
     "idx_adminUX":"导入管理员用户体验",
-    "idx_preload":"预先导入网络"
+    "idx_preload":"预先导入网络",
+    "idx_blockchain": "显示区块链"
     },
     "admin": {
     "title":"区块链全球金融",    

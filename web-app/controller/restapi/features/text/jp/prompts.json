@@ -12,7 +12,8 @@
     "idx_roles":"役割",
     "idx_admin":"管理者",
     "idx_adminUX":"管理者ユーザー経験のロード",
-    "idx_preload":"事前ロードネットワーク"
+    "idx_preload":"事前ロードネットワーク",
+    "idx_blockchain": "モントレルラブロックチェーン"
     },
     "admin": {
     "title":"ブロックチェーンを使ったグローバルファイナンス",    

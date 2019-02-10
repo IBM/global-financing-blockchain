@@ -12,7 +12,8 @@
     "idx_roles":"Roles",
     "idx_admin":"Admin",
     "idx_adminUX":"Charger l'expérience de l'administrateur",
-    "idx_preload":"Pré-charger le Réseau"
+    "idx_preload":"Pré-charger le Réseau",
+    "idx_blockchain": "Montrer la blockchain"
     },
     "admin": {
     "title":"Finance mondiale avec Blockchain",    

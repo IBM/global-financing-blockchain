@@ -12,7 +12,8 @@
     "idx_roles": "Roles",
     "idx_admin": "Admin",
     "idx_adminUX": "load Admin User Experience",
-    "idx_preload": "Preload Network"
+    "idx_preload": "Preload Network",
+    "idx_blockchain": "Show Blockchain"
   },
   "admin": {
     "title": "Global Finance with Blockchain",
