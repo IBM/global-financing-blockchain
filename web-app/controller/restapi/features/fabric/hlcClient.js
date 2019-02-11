@@ -173,7 +173,7 @@ exports.orderAction = async function (req, res, next) {
             break;
         case 'Dispute':
             console.log('Dispute entered');
-            const disputeResponse = await contract.submitTransaction('Dispute', order.orderNumber, order.buyerId, order.sellerId, financeCoId, req.body.reason);
+            const disputeResponse = await contract.submitTransaction('Dispute', order.orderNumber, order.buyerId, order.sellerId, financeCoID, req.body.reason);
             console.log('disputeResponse_response: ');
             console.log(JSON.parse(disputeResponse.toString()));            
             break;
