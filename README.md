@@ -90,23 +90,28 @@ Click the `IBM Blockchain Platform` extension button on the left. This will show
   <img height="500" src="docs/doc-images/ibm-blockchain-extension.png">
 </p>
 
-### Setup local_fabric
+### Setup fabric locally
 
-Click on `local_fabric` to start a network. This will download the Docker images required for a local Fabric setup, and start the network. You should see the output window as the network sets up.
+Click on the menu for `LOCAL FABRIC OPS`, and choose `Start Fabric Runtime` to start a network. This will download the Docker images required for a local Fabric setup, and start the network. You should see the output window as the network sets up.
 
 <p align="center">
-  <img src="docs/doc-images/fabric-setup-output.png">
+  <img src="docs/doc-images/start-fabric.png">
 </p>
 
-Click on `local_fabric` again; it should have a full white circle next to it. This should bring up `mychannel`. You are now ready to install the smart contract.
+You should now see under `LOCAL FABRIC OPS`, options to install and instantiate smart contract, your `Channels` information, your peer under `Nodes` and the organization msp under `Organizations`  You are now ready to install the smart contract.
 
+<p align="center">
+  <img width="300" src="docs/doc-images/fabric-setup-output.png">
+</p>
 
 ### Install and instantiate the smart contract
 
-Click on `mychannel`, then `Peers`. This will display `peer0.org1.example.com`. Right click on it and choose `Install Smart Contract`:
+Click on `+Install` under `Installed` dropdown in the `LOCAL FABRIC OPS` console.
+
+Choose the peer: `peer0.org1.example.com`.
 
 <p align="center">
-  <img width="300" src="docs/doc-images/install-smart-contract.png">
+  <img width="500" src="docs/doc-images/choose-peer.png">
 </p>
 
 Choose the `globalfinancing@0.0.1` contract:
@@ -115,10 +120,20 @@ Choose the `globalfinancing@0.0.1` contract:
   <img width="500" src="docs/doc-images/choose-smart-contract.png">
 </p>
 
-You are now ready to instantiate the smart contract. Right click on `mychannel` and choose `Instantiate Smart Contract`:
+You should see a notification for successful install of the smart contract, and the smart contract listed under `Installed` in your `LOCAL FABRIC OPS` console.
 
 <p align="center">
-  <img width="300" src="docs/doc-images/instantiate-smart-contract.png">
+  <img width="300" src="docs/doc-images/installed-smart-contract.png">
+</p>
+
+
+You are now ready to instantiate the smart contract.
+Click on `+Instantiate` under `Instantiated` dropdown in the `LOCAL FABRIC OPS` console.
+
+Choose the channel: `my channel`.
+
+<p align="center">
+  <img width="500" src="docs/doc-images/choose-channel.png">
 </p>
 
 Choose the `globalfinancing@0.0.1` contract:
@@ -135,7 +150,12 @@ Type in `instantiate` for the function:
 
 You can press **Enter** for optional arguments.  
 
-Once this is successfully instantiated, you should see a successful notification in the output view.
+Once this is successfully instantiated, you should see a successful notification in the output view, and the smart contract listed under `Instantiated` in your `LOCAL FABRIC OPS` console.
+
+<p align="center">
+  <img width="300" src="docs/doc-images/instantiated-smart-contract.png">
+</p>
+
 
 ## 3. Run the application
 
