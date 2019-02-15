@@ -95,7 +95,7 @@ Click the `IBM Blockchain Platform` extension button on the left. This will show
 Click on the menu for `LOCAL FABRIC OPS`, and choose `Start Fabric Runtime` to start a network. This will download the Docker images required for a local Fabric setup, and start the network. You should see the output window as the network sets up.
 
 <p align="center">
-  <img src="docs/doc-images/start-fabric.png">
+  <img width="500" src="docs/doc-images/start-fabric.png">
 </p>
 
 You should now see under `LOCAL FABRIC OPS`, options to install and instantiate smart contract, your `Channels` information, your peer under `Nodes` and the organization msp under `Organizations`  You are now ready to install the smart contract.
