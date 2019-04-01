@@ -379,7 +379,7 @@ class GlobalFinance extends Contract {
 
             return JSON.stringify(order);
         } else {
-            throw new Error('order not created, bought or backordered');
+            throw new Error('order status not bought');
         }
     }
 
@@ -432,7 +432,7 @@ class GlobalFinance extends Contract {
             return JSON.stringify(order);
 
         } else {
-            throw new Error('order not created, bought or backordered');
+            throw new Error('order status not ordered or backordered');
         }
     }
 
@@ -469,7 +469,7 @@ class GlobalFinance extends Contract {
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
             return JSON.stringify(order);
         } else {
-            throw new Error('order not created, bought or backordered');
+            throw new Error('order status not shipping requested or delivering');
         }
     }
 
@@ -504,7 +504,7 @@ class GlobalFinance extends Contract {
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
             return JSON.stringify(order);
         } else {
-            throw new Error('order not delivered');
+            throw new Error('order status not shipping requested or delivering');
         }
     }
 
@@ -551,7 +551,7 @@ class GlobalFinance extends Contract {
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
             return JSON.stringify(order);
         } else {
-            throw new Error('order not created, bought or backordered');
+            throw new Error('order status not delivered or resolved');
         }
     }
 
@@ -599,7 +599,7 @@ class GlobalFinance extends Contract {
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
             return JSON.stringify(order);
         } else {
-            throw new Error('order not created, bought or backordered');
+            throw new Error('order status not payment requested or resolved');
         }
     }
 
@@ -646,7 +646,7 @@ class GlobalFinance extends Contract {
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
             return JSON.stringify(order);
         } else {
-            throw new Error('order not created, bought or backordered');
+            throw new Error('order status not authorize payment');
         }
     }
 
