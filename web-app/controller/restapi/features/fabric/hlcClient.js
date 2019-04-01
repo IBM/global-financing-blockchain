@@ -276,9 +276,10 @@ exports.orderAction = async function (req, res, next) {
  */
 exports.addOrder = async function (req, res, next) {
     let method = 'addOrder';
-    console.log(method+' req.body.buyer is: '+req.body.buyer );
-    let ts = Date.now();
-    let orderNo = req.body.buyer.replace(/@/, '').replace(/\./, '')+ts;
+    console.log(method+' req.body.buyer is: '+req.body.buyer );    
+    let orderNo = '00' + Math.floor(Math.random() * 10000);
+    let order = {};
+    order = svc.createOrderTemplate(order);
     if (svc.m_connection === null) {svc.createMessageSocket();}
 
     // Main try/catch block
@@ -296,6 +297,7 @@ exports.addOrder = async function (req, res, next) {
 
         let items;
         let amount;
+        
         for (let each in req.body.items){
             (function(_idx, _arr){   
                 _arr[_idx].description = _arr[_idx].itemDescription;
@@ -304,8 +306,8 @@ exports.addOrder = async function (req, res, next) {
             })(each, req.body.items);
         }
         
-        items = JSON.stringify(items);
-        amount = amount.toString();
+        items = JSON.stringify(order.items);
+        amount = order.amount.toString();
 
         const createOrderResponse = await contract.submitTransaction('CreateOrder', req.body.buyer, req.body.seller, financeCoID, orderNo, items, amount);
         console.log('createOrderResponse: ')

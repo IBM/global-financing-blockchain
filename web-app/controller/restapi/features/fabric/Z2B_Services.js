@@ -54,27 +54,6 @@ let  Z2Blockchain  = {
         _inbound.amount = 0;
         _inbound.items = [];
         _inbound.status = JSON.stringify(this.orderStatus.Created);
-        _inbound.created = new Date().toISOString();
-        _inbound.cancelled = '';
-        _inbound.ordered = '';
-        _inbound.bought = '';
-        _inbound.dateBackordered = '';
-        _inbound.requestShipment = '';
-        _inbound.delivered = '';
-        _inbound.delivering = '';
-        _inbound.disputeOpened = '';
-        _inbound.disputeResolved = '';
-        _inbound.orderRefunded = '';
-        _inbound.paymentRequested = '';
-        _inbound.paid = '';
-        _inbound.approved = '';
-        _inbound.dispute = '';
-        _inbound.resolve = '';
-        _inbound.backorder = '';
-        _inbound.refund = '';
-        _inbound.provider = '';
-        _inbound.shipper = '';
-        _inbound.financeCo = '';
         return(_inbound);
     },
 /**
