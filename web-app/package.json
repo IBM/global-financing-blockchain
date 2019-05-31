@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "A global financing web-application",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "lint": "eslint --ignore-path .gitignore ."
   },
   "engines": {
     "node": ">=8",
@@ -12,8 +13,9 @@
   "author": "IBM",
   "license": "Apache-2.0",
   "devDependencies": {
-    "extend": "",
     "browserfs": "^1.2.0",
+    "eslint": "^5.16.0",
+    "extend": "",
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
