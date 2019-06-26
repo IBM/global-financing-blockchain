@@ -158,6 +158,45 @@ Once this is successfully instantiated, you should see a successful notification
   <img width="300" src="docs/doc-images/instantiated-smart-contract.png">
 </p>
 
+### Add Identity on CA Node
+
+Identity information and key files are included on the souce codes from GitHub, but you need to modify these files as own information for available to authenticate. Add Identity on CA Node.
+
+Right click `ca.org1.example.com` from `LOCAL FABRIC OPS` console `Nodes` and chose `Create Identity` .
+Type `User1@org1.example.com` and press enter key.
+
+<p align="center">
+  <img width="500" src="docs/doc-images/added_pic01.png">
+</p>
+
+You can see `User1@org1.example.com` on `FABRIC WALLETS` console `local_fabric_wallet` .
+
+<p align="center">
+  <img width="300" src="docs/doc-images/added_pic02.png">
+</p>
+
+### Export Wallet
+
+Export Wallet from VS Code Extension. You can save the export files anyware. The sample below, it's saved on desktop.
+
+<p align="center">
+  <img width="300" src="docs/doc-images/added_pic03.png">
+</p>
+<p align="center">
+  <img width="500" src="docs/doc-images/added_pic04.png">
+</p>
+
+Copy files you exported on the directory the app will use.
+Some files from GitHub repo already exists, so delete them.
+  ```
+  /global-financing-blockchain/web-app/controller/restapi/features/fabric/_idwallet/User1@org1.example.com
+  ```
+
+<p align="center">
+  <img width="500" src="docs/doc-images/added_pic06.png">
+</p>
+
+Almost done, you can run the application.
 
 ## 3. Run the application
 

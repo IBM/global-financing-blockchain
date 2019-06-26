@@ -159,6 +159,44 @@ VS Codeの他のオプションを見るために `F1` キーを押してくだ�
   <img width="300" src="docs/doc-images/instantiated-smart-contract.png">
 </p>
 
+### CAノードにIdentityを追加する
+
+GitHubからCloneしたソースコードの中にIdentityの情報や認証に使用する鍵ファイルも含まれていますが、ご自身の環境に合わせ書き換える（置き換える）必要があります。先ずは、CAノードにIdentityを追加します。
+`LOCAL FABRIC OPS` コンソールの `Nodes` ドロップダウンの下の `ca.org1.example.com` を右クリックして `Create Identity` を選択してください。表示された入力ボックスに `User1@org1.example.com` を入力しEnterを押します。
+
+<p align="center">
+  <img width="500" src="docs/doc-images/added_pic01.png">
+</p>
+
+すると `FABRIC WALLETS` コンソールの `local_fabric_wallet` の配下に `User1@org1.example.com` が追加されたのが確認できます。
+
+<p align="center">
+  <img width="300" src="docs/doc-images/added_pic02.png">
+</p>
+
+### Walletをエクスポートする
+
+追加したIdentityの情報をアプリケーションが認証に使えるようにするため、VS CodeのExtensionからWalletをエクスポートします。エクスポート先は任意の場所で結構です。ここではデスクトップに一旦保存しています。
+
+<p align="center">
+  <img width="300" src="docs/doc-images/added_pic03.png">
+</p>
+<p align="center">
+  <img width="500" src="docs/doc-images/added_pic04.png">
+</p>
+
+アプリケーションが認証処理で参照するディレクトリに、エクスポートしたファイルをコピーします。対象のディレクトリは以下になります。
+GitHubからCloneしたファイルが既に存在していますので、それらは削除して下さい。
+  ```
+  /global-financing-blockchain/web-app/controller/restapi/features/fabric/_idwallet/User1@org1.example.com
+  ```
+
+<p align="center">
+  <img width="500" src="docs/doc-images/added_pic06.png">
+</p>
+
+これで、アプリケーションからブロックチェーンネットワークへの認証が可能になりました。
+
 ## 3. アプリケーションの実行
 
 新しいターミナルで `web-app` ディレクトリへ移動します:
