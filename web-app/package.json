@@ -1,6 +1,6 @@
 {
   "name": "global-financing-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A global financing web-application",
   "scripts": {
     "start": "node index",

@@ -35,17 +35,17 @@
     },
     "orderers": {
         "orderer.example.com": {
-            "url": "grpc://localhost:17050"
+            "url": "grpc://localhost:17053"
         }
     },
     "peers": {
         "peer0.org1.example.com": {
-            "url": "grpc://localhost:17051"
+            "url": "grpc://localhost:17057"
         }
     },
     "certificateAuthorities": {
         "ca.example.com": {
-            "url": "http://localhost:17054",
+            "url": "http://localhost:17060",
             "caName": "ca.example.com"
         }
     }

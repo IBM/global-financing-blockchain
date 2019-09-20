@@ -77,19 +77,19 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
         //get list of buyers, sellers, providers, shippers, financeCos
         const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
-        let buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
+        let buyers = JSON.parse(responseBuyer.toString());
                 
         const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
-        let sellers = JSON.parse(JSON.parse(responseSeller.toString()));
+        let sellers = JSON.parse(responseSeller.toString());
  
         const responseProvider = await contract.evaluateTransaction('GetState', "providers");
-        let providers = JSON.parse(JSON.parse(responseProvider.toString()));
+        let providers = JSON.parse(responseProvider.toString());
 
         const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
-        let shippers = JSON.parse(JSON.parse(responseShipper.toString()));
+        let shippers = JSON.parse(responseShipper.toString());
         
         const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
-        let financeCos = JSON.parse(JSON.parse(responseFinanceCo.toString()));
+        let financeCos = JSON.parse(responseFinanceCo.toString());
 
         //iterate through the list of members in the memberList.json file        
         for (let member of startupFile.members) {
@@ -146,7 +146,7 @@ exports.autoLoad = async function autoLoad(req, res, next) {
         console.log('Get all orders'); 
         for (let buyer of buyers) { 
             const buyerResponse = await contract.evaluateTransaction('GetState', buyer);
-            var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
+            var _buyerjsn = JSON.parse(buyerResponse.toString());       
             
             for (let orderNo of _buyerjsn.orders) {                 
                 allOrders.push(orderNo);            

@@ -1,13 +1,17 @@
 const Fabric_Client = require('fabric-client');
 var path = require('path');
+var fs = require('fs');
 
 var fabric_client = new Fabric_Client();
 
 // setup the fabric network
 var channel = fabric_client.newChannel('mychannel');
-var peer = fabric_client.newPeer('grpc://localhost:17051');
+const ccpPath = path.resolve(__dirname, 'connection.json');
+const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+const ccp = JSON.parse(ccpJSON);
+var peer = fabric_client.newPeer(ccp.peers['peer0.org1.example.com'].url);
 channel.addPeer(peer);
-var order = fabric_client.newOrderer('grpc://localhost:17050')
+var order = fabric_client.newOrderer(ccp.orderers['orderer.example.com'].url)
 channel.addOrderer(order);
 
 var store_path = path.join(__dirname, '_idwallet', 'User1@org1.example.com');

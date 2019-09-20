@@ -86,31 +86,31 @@ exports.getMembers = async function(req, res, next) {
                 const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
                 console.log('responseBuyer: ');
                 console.log(JSON.parse(responseBuyer.toString()));
-                members = JSON.parse(JSON.parse(responseBuyer.toString()));
+                members = JSON.parse(responseBuyer.toString());
                 break;            
             case 'Seller':
                 const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
                 console.log('responseSeller: ');
                 console.log(JSON.parse(responseSeller.toString()));
-                members = JSON.parse(JSON.parse(responseSeller.toString()));
+                members = JSON.parse(responseSeller.toString());
                 break;
             case 'Provider':
                 const responseProvider = await contract.evaluateTransaction('GetState', "providers");
                 console.log('responseProvider: ');
                 console.log(JSON.parse(responseProvider.toString()));
-                members = JSON.parse(JSON.parse(responseProvider.toString()));
+                members = JSON.parse(responseProvider.toString());
                 break; 
             case 'Shipper':
                 const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
                 console.log('responseShipper: ');
                 console.log(JSON.parse(responseShipper.toString()));
-                members = JSON.parse(JSON.parse(responseShipper.toString()));                
+                members = JSON.parse(responseShipper.toString());
                 break; 
             case 'FinanceCo':
                 const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
                 console.log('responseFinanceCo: ');
                 console.log(JSON.parse(responseFinanceCo.toString()));
-                members = JSON.parse(JSON.parse(responseFinanceCo.toString()));
+                members = JSON.parse(responseFinanceCo.toString());
                 break; 
             default:
                 res.send({'error': 'body registry not found'});
@@ -121,7 +121,7 @@ exports.getMembers = async function(req, res, next) {
             const response = await contract.evaluateTransaction('GetState', member);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
-            var _jsn = JSON.parse(JSON.parse(response.toString()));                       
+            var _jsn = JSON.parse(response.toString());                       
             allMembers.push(_jsn); 
         }
 
@@ -172,19 +172,19 @@ exports.getAssets = async function(req, res, next) {
         const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
         console.log('responseBuyer: ');
         console.log(JSON.parse(responseBuyer.toString()));
-        var buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
+        var buyers = JSON.parse(responseBuyer.toString());
 
         for (let buyer of buyers) { 
             const buyerResponse = await contract.evaluateTransaction('GetState', buyer);
             console.log('response: ');
             console.log(JSON.parse(buyerResponse.toString()));
-            var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
+            var _buyerjsn = JSON.parse(buyerResponse.toString());       
             
             for (let orderNo of _buyerjsn.orders) { 
                 const response = await contract.evaluateTransaction('GetState', orderNo);
                 console.log('response: ');
                 console.log(JSON.parse(response.toString()));
-                var _jsn = JSON.parse(JSON.parse(response.toString()));
+                var _jsn = JSON.parse(response.toString());
                 var _jsnItems = JSON.parse(_jsn.items);
                 _jsn.items = _jsnItems;
                 allOrders.push(_jsn);            
@@ -238,23 +238,23 @@ exports.addMember = async function(req, res, next) {
         {
             case 'Buyer':
                 const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
-                members = JSON.parse(JSON.parse(responseBuyer.toString()));
+                members = JSON.parse(responseBuyer.toString());
                 break;            
             case 'Seller':
                 const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
-                members = JSON.parse(JSON.parse(responseSeller.toString()));
+                members = JSON.parse(responseSeller.toString());
                 break;
             case 'Provider':
                 const responseProvider = await contract.evaluateTransaction('GetState', "providers");
-                members = JSON.parse(JSON.parse(responseProvider.toString()));
+                members = JSON.parse(responseProvider.toString());
                 break; 
             case 'Shipper':
                 const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
-                members = JSON.parse(JSON.parse(responseShipper.toString()));
+                members = JSON.parse(responseShipper.toString());
                 break; 
             case 'FinanceCo':
                 const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
-                members = JSON.parse(JSON.parse(responseFinanceCo.toString()));
+                members = JSON.parse(responseFinanceCo.toString());
                 break; 
             default:
                 res.send({'error': 'body type not found'});

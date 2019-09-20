@@ -67,14 +67,14 @@ exports.getMyOrders = async function (req, res, next) {
         const responseMember = await contract.evaluateTransaction('GetState', req.body.userID);
         console.log('responseMember: ');
         console.log(JSON.parse(responseMember.toString()));
-        let member = JSON.parse(JSON.parse(responseMember.toString()))
+        let member = JSON.parse(responseMember.toString());
 
         // Get the orders for the member including their state
         for (let orderNo of member.orders) { 
             const response = await contract.evaluateTransaction('GetState', orderNo);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
-            var _jsn = JSON.parse(JSON.parse(response.toString()));
+            var _jsn = JSON.parse(response.toString());
             var _jsnItems = JSON.parse(_jsn.items);
             _jsn.items = _jsnItems;
             allOrders.push(_jsn);            
@@ -160,7 +160,7 @@ exports.orderAction = async function (req, res, next) {
         const responseOrder = await contract.evaluateTransaction('GetState', req.body.orderNo);
         console.log('responseOrder: ');
         console.log(JSON.parse(responseOrder.toString()));
-        let order = JSON.parse(JSON.parse(responseOrder.toString()));
+        let order = JSON.parse(responseOrder.toString());
         
         // Perform action on the order
         switch (req.body.action)
