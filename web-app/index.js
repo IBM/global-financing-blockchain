@@ -81,10 +81,10 @@ app.locals.wsServer.on('request', function(request)
         // each browser connection has a unique address and socket combination
         // When a browser session is disconnected, remove it from the array so we don't waste processing time sending messages to empty queues.
         for (let each in clients)
-            {(function(_idx, _arr)
-                {if ((_arr[_idx].socket._peername.address === app.locals.connection.socket._peername.address) && (_arr[_idx].socket._peername.port === app.locals.connection.socket._peername.port))
-                    {clients.splice(_idx, 1);}
-            })(each, clients);}
+        {(function(_idx, _arr)
+        {if ((_arr[_idx].socket._peername.address === app.locals.connection.socket._peername.address) && (_arr[_idx].socket._peername.port === app.locals.connection.socket._peername.port))
+        {clients.splice(_idx, 1);}
+        })(each, clients);}
     });
 });
 
@@ -107,6 +107,7 @@ server.listen(appEnv.port, function() {console.log('Listening locally on port %d
  * @param {express.res} res - the outbound response object for communicating back to client
  * @function
  */
+// eslint-disable-next-line no-unused-vars
 function loadSelectedFile(req, res) {
     let uri = req.originalUrl;
     let filename = __dirname + '/HTML' + uri;

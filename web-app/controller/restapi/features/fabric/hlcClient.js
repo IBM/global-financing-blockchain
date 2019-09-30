@@ -70,27 +70,27 @@ exports.getMyOrders = async function (req, res, next) {
         let member = JSON.parse(responseMember.toString());
 
         // Get the orders for the member including their state
-        for (let orderNo of member.orders) { 
+        for (let orderNo of member.orders) {
             const response = await contract.evaluateTransaction('GetState', orderNo);
             console.log('response: ');
             console.log(JSON.parse(response.toString()));
-            var _jsn = JSON.parse(response.toString());
-            var _jsnItems = JSON.parse(_jsn.items);
+            let _jsn = JSON.parse(response.toString());
+            let _jsnItems = JSON.parse(_jsn.items);
             _jsn.items = _jsnItems;
-            allOrders.push(_jsn);            
+            allOrders.push(_jsn);
         }
 
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         console.log('getMyOrders Complete');
         await gateway.disconnect();
-        res.send({'result': 'success', 'orders': allOrders});
-        
+        res.send({result: 'success', orders: allOrders});
+
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
-        res.send({'error': error.stack});
-    } 
+        res.send({error: error.stack});
+    }
 };
 
 
@@ -104,7 +104,7 @@ exports.getMyOrders = async function (req, res, next) {
  */
 exports.getItemTable = function (req, res, next)
 {
-    
+
     if (itemTable === null)
     {
         let newFile = path.join(path.dirname(require.main.filename),'startup','itemList.txt');
@@ -133,12 +133,12 @@ exports.getItemTable = function (req, res, next)
 exports.orderAction = async function (req, res, next) {
     let method = 'orderAction';
     console.log(method+' req.body.participant is: '+req.body.participant );
-    
+
     if ((req.body.action === 'Dispute') && (typeof(req.body.reason) !== 'undefined') && (req.body.reason.length > 0) )
     {/*let reason = req.body.reason;*/}
     else {
         if ((req.body.action === 'Dispute') && ((typeof(req.body.reason) === 'undefined') || (req.body.reason.length <1) ))
-            {res.send({'result': 'failed', 'error': 'no reason provided for dispute'});}
+        {res.send({result: 'failed', error: 'no reason provided for dispute'});}
     }
     if (svc.m_connection === null) {svc.createMessageSocket();}
 
@@ -161,105 +161,118 @@ exports.orderAction = async function (req, res, next) {
         console.log('responseOrder: ');
         console.log(JSON.parse(responseOrder.toString()));
         let order = JSON.parse(responseOrder.toString());
-        
+
         // Perform action on the order
         switch (req.body.action)
         {
-        case 'Pay':
+        case 'Pay':{
             console.log('Pay entered');
             const payResponse = await contract.submitTransaction('Pay', order.orderNumber, order.sellerId, financeCoID);
             console.log('payResponse: ');
             console.log(JSON.parse(payResponse.toString()));
             break;
-        case 'Dispute':
+        }
+        case 'Dispute': {
             console.log('Dispute entered');
             const disputeResponse = await contract.submitTransaction('Dispute', order.orderNumber, order.buyerId, order.sellerId, financeCoID, req.body.reason);
             console.log('disputeResponse_response: ');
-            console.log(JSON.parse(disputeResponse.toString()));            
+            console.log(JSON.parse(disputeResponse.toString()));
             break;
-        case 'Purchase':
+        }
+        case 'Purchase': {
             console.log('Purchase entered');
             const buyResponse = await contract.submitTransaction('Buy', order.orderNumber, order.buyerId, order.sellerId);
             console.log('buyResponse: ');
-            console.log(JSON.parse(buyResponse.toString()));             
+            console.log(JSON.parse(buyResponse.toString()));
             break;
-        case 'Order From Supplier':
+        }
+        case 'Order From Supplier': {
             console.log('Order from Supplier entered for '+order.orderNumber+ ' inbound id: '+ req.body.participant+' with order.seller as: '+order.sellerId+' with provider as: '+req.body.provider);
             const orderSupplierResponse = await contract.submitTransaction('OrderFromSupplier', order.orderNumber, order.sellerId, req.body.provider);
-            console.log('orderSupplierResponse: ')
+            console.log('orderSupplierResponse: ');
             console.log(JSON.parse(orderSupplierResponse.toString()));
             break;
-        case 'Request Payment':
+        }
+        case 'Request Payment': {
             console.log('Request Payment entered');
             const requestPaymentResponse = await contract.submitTransaction('RequestPayment', order.orderNumber, order.sellerId, financeCoID);
             console.log('requestPaymentResponse_response: ');
             console.log(JSON.parse(requestPaymentResponse.toString()));
             break;
-        case 'Refund':
+        }
+        case 'Refund': {
             console.log('Refund Payment entered');
             const refundResponse = await contract.submitTransaction('Refund', order.orderNumber, order.sellerId, financeCoID, req.body.reason);
             console.log('refundResponse_response: ');
-            console.log(JSON.parse(refundResponse.toString()));            
+            console.log(JSON.parse(refundResponse.toString()));
             break;
-        case 'Resolve':
+        }
+        case 'Resolve':{
             console.log('Resolve entered');
             const resolveResponse = await contract.submitTransaction('Resolve', order.orderNumber, order.buyerId, order.sellerId, order.shipperId, order.providerId, financeCoID, req.body.reason);
             console.log('resolveResponse_response: ');
             console.log(JSON.parse(resolveResponse.toString()));
             break;
-        case 'Request Shipping':
+        }
+        case 'Request Shipping': {
             console.log('Request Shipping entered');
             const requestShippingResponse = await contract.submitTransaction('RequestShipping', order.orderNumber, order.providerId, req.body.shipper);
             console.log('requestShippingResponse: ');
             console.log(JSON.parse(requestShippingResponse.toString()));
             break;
-        case 'Update Delivery Status':
+        }
+        case 'Update Delivery Status': {
             console.log('Update Delivery Status');
             const deliveringResponse = await contract.submitTransaction('Delivering', order.orderNumber, order.shipperId, req.body.delivery);
             console.log('deliveringResponse: ');
             console.log(JSON.parse(deliveringResponse.toString()));
             break;
-        case 'Delivered':
+        }
+        case 'Delivered': {
             console.log('Delivered entered');
             console.log('participant: ' + req.body.participant);
             const deliverResponse = await contract.submitTransaction('Deliver', order.orderNumber, req.body.participant);
             console.log('deliverResponse_response: ');
             console.log(JSON.parse(deliverResponse.toString()));
             break;
-        case 'BackOrder':
+        }
+        case 'BackOrder': {
             console.log('BackOrder entered');
             const backOrderResponse = await contract.submitTransaction('BackOrder', order.orderNumber, order.providerId, req.body.reason);
             console.log('backOrderResponse_response: ');
-            console.log(JSON.parse(backOrderResponse.toString()));            
+            console.log(JSON.parse(backOrderResponse.toString()));
             break;
-        case 'Authorize Payment':
+        }
+        case 'Authorize Payment': {
             console.log('Authorize Payment entered');
             const authorizePaymentResponse = await contract.submitTransaction('AuthorizePayment', order.orderNumber, order.buyerId, financeCoID);
             console.log('authorizePaymentResponse: ');
             console.log(JSON.parse(authorizePaymentResponse.toString()));
             break;
-        case 'Cancel':
+        }
+        case 'Cancel': {
             console.log('Cancel entered');
             const orderCancelResponse = await contract.submitTransaction('OrderCancel', order.orderNumber, order.sellerId, order.providerId);
-            console.log('orderCancelResponse_response: ')
-            console.log(JSON.parse(orderCancelResponse.toString()));            
+            console.log('orderCancelResponse_response: ');
+            console.log(JSON.parse(orderCancelResponse.toString()));
             break;
+        }
         default :
             console.log('default entered for action: '+req.body.action);
-            res.send({'result': 'failed', 'error':' order '+req.body.orderNo+' unrecognized request: '+req.body.action});
+            res.send({result: 'failed', error:' order '+req.body.orderNo+' unrecognized request: '+req.body.action});
         }
-        
+
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         console.log('orderAction Complete');
         await gateway.disconnect();
-        res.send({'result': ' order '+req.body.orderNo+' successfully updated to '+req.body.action});
-            
+        res.send({result: ' order '+req.body.orderNo+' successfully updated to '+req.body.action});
+
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
-        res.send({'error': error.stack});
-    } 
+        res.send({error: error.stack});
+    }
 
 };
 
@@ -276,7 +289,7 @@ exports.orderAction = async function (req, res, next) {
  */
 exports.addOrder = async function (req, res, next) {
     let method = 'addOrder';
-    console.log(method+' req.body.buyer is: '+req.body.buyer );    
+    console.log(method+' req.body.buyer is: '+req.body.buyer );
     let orderNo = '00' + Math.floor(Math.random() * 10000);
     let order = {};
     order = svc.createOrderTemplate(order);
@@ -297,34 +310,34 @@ exports.addOrder = async function (req, res, next) {
 
         let items;
         let amount;
-        
+
         for (let each in req.body.items){
-            (function(_idx, _arr){   
+            (function(_idx, _arr){
                 _arr[_idx].description = _arr[_idx].itemDescription;
                 order.items.push(JSON.stringify(_arr[_idx]));
                 order.amount += parseInt(_arr[_idx].extendedPrice);
             })(each, req.body.items);
         }
-        
+
         items = JSON.stringify(order.items);
         amount = order.amount.toString();
 
         const createOrderResponse = await contract.submitTransaction('CreateOrder', req.body.buyer, req.body.seller, financeCoID, orderNo, items, amount);
-        console.log('createOrderResponse: ')
+        console.log('createOrderResponse: ');
         console.log(JSON.parse(createOrderResponse.toString()));
 
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         console.log('addOrder Complete');
         await gateway.disconnect();
-        res.send({'result': ' order '+orderNo+' successfully added'});
+        res.send({result: ' order '+orderNo+' successfully added'});
 
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
-        res.send({'error': error.stack});
-    } 
-    
+        res.send({error: error.stack});
+    }
+
 };
 
 
