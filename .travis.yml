@@ -3,5 +3,4 @@ node_js:
   - "8"
 
 script:
-  - cs contract && npm install && npm run lint
-  - cd web-app && npm install && npm run lint
+  - cs contract && npm install && npm run lint && cd ../web-app && npm install && npm run lint
