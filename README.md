@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/IBM/global-financing-blockchain.svg?branch=master)](https://travis-ci.org/IBM/global-financing-blockchain)
+
 *Read this in other languages: [日本語](README-ja.md)* 
 
 # Global financing with blockchain
