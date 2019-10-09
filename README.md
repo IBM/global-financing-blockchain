@@ -228,6 +228,36 @@ Unified member's view:
   <img width="1000" src="docs/doc-images/app-unified-view.png">
 </div>
 
+## Troubleshooting
+
+* If you run into an error like this one:
+`error: [Remote.js]: Error: Failed to connect before the deadline URL:grpc://localhost:17051
+error: [Network]: _initializeInternalChannel: Unable to initialize channel. Attempted to contact 1 Peers. Last error was Error: Failed to connect before the deadline URL:grpc://localhost:17051`
+
+  This error has occurred because the ports used for the orderer/certificate authority/peer in the connection.json file are not the same as the ones specified as the default ports in the settings.json file for the IBM Blockchain Platform Extension for VSCode. You will need to update the ports in the connection.json file to match the ones specified in the settings.json file.
+  
+  Click on the Gear symbol in the bottom left corner and select `Settings`. Expand `Extensions` in the left navigation pane in the newly opened "Settings" tab and select `Blockchain configuration`. Click on `Edit in settings.json` to open the settings.json file for the Blockchain platform extension. You should see a file with contents like this:
+```
+{
+    "ibm-blockchain-platform.fabric.runtime": {
+        "ports": {
+            "orderer": 17053,
+            "peerRequest": 17057,
+            "peerChaincode": 17058,
+            "peerEventHub": 17059,
+            "certificateAuthority": 17060,
+            "couchDB": 17061,
+            "logs": 17062
+        },
+        "developmentMode": false
+    },
+    "ibm-blockchain-platform.fabric.wallets": [],
+    "ibm-blockchain-platform.fabric.gateways": []
+}
+```
+  
+  Replace the orderer, peer and CA ports in the connection.json file for your project with the `orderer`, `peerRequest` and `certificateAuthority` ports specified in this settings.json file.
+
 ## Extending the code pattern
 This application can be expanded in a couple of ways:
 * Create a wallet for every member and use the member's wallet to interact with the application.
