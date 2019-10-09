@@ -8,12 +8,14 @@
         "npm": ">=5"
     },
     "scripts": {
-        "start": "fabric-chaincode-node start"
+        "start": "fabric-chaincode-node start",
+        "lint": "eslint ."
     },
     "engineStrict": true,
     "author": "Raheel Zubairy",
     "license": "Apache-2.0",
     "dependencies": {
+        "eslint": "^6.5.0",
         "fabric-contract-api": "~1.4.0",
         "fabric-shim": "~1.4.0"
     }

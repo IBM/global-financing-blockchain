@@ -1,10 +1,10 @@
 {
   "name": "global-financing-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A global financing web-application",
   "scripts": {
     "start": "node index",
-    "lint": "eslint --ignore-path .gitignore ."
+    "lint": "eslint --ignore-path ../.eslintignore ."
   },
   "engines": {
     "node": ">=8",
@@ -26,6 +26,7 @@
     "date-format": "",
     "ejs": "",
     "express": "^4.15.4",
+    "fabric-client": "^1.4.4",
     "fabric-network": "~1.4.0",
     "http": "0.0.0",
     "https": "^1.0.0",

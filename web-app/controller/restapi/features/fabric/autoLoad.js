@@ -12,10 +12,10 @@
  * limitations under the License.
  */
 
- /**
+/**
  * This file is used to automatically populate the network with Order assets and members
  * The opening section loads node modules required for this set of nodejs services
- * to work. This module also uses services created specifically for this tutorial, 
+ * to work. This module also uses services created specifically for this tutorial,
  * in the Z2B_Services.js.
  */
 
@@ -60,7 +60,7 @@ exports.autoLoad = async function autoLoad(req, res, next) {
 
     // get the autoload file
     let newFile = path.join(path.dirname(require.main.filename),'startup','memberList.json');
-    let startupFile = JSON.parse(fs.readFileSync(newFile));        
+    let startupFile = JSON.parse(fs.readFileSync(newFile));
 
     // Main try/catch block
     try {
@@ -76,22 +76,22 @@ exports.autoLoad = async function autoLoad(req, res, next) {
         const contract = await network.getContract('globalfinancing');
 
         //get list of buyers, sellers, providers, shippers, financeCos
-        const responseBuyer = await contract.evaluateTransaction('GetState', "buyers");
-        let buyers = JSON.parse(JSON.parse(responseBuyer.toString()));
-                
-        const responseSeller = await contract.evaluateTransaction('GetState', "sellers");
-        let sellers = JSON.parse(JSON.parse(responseSeller.toString()));
- 
-        const responseProvider = await contract.evaluateTransaction('GetState', "providers");
-        let providers = JSON.parse(JSON.parse(responseProvider.toString()));
+        const responseBuyer = await contract.evaluateTransaction('GetState', 'buyers');
+        let buyers = JSON.parse(responseBuyer.toString());
 
-        const responseShipper = await contract.evaluateTransaction('GetState', "shippers");
-        let shippers = JSON.parse(JSON.parse(responseShipper.toString()));
-        
-        const responseFinanceCo = await contract.evaluateTransaction('GetState', "financeCos");
-        let financeCos = JSON.parse(JSON.parse(responseFinanceCo.toString()));
+        const responseSeller = await contract.evaluateTransaction('GetState', 'sellers');
+        let sellers = JSON.parse(responseSeller.toString());
 
-        //iterate through the list of members in the memberList.json file        
+        const responseProvider = await contract.evaluateTransaction('GetState', 'providers');
+        let providers = JSON.parse(responseProvider.toString());
+
+        const responseShipper = await contract.evaluateTransaction('GetState', 'shippers');
+        let shippers = JSON.parse(responseShipper.toString());
+
+        const responseFinanceCo = await contract.evaluateTransaction('GetState', 'financeCos');
+        let financeCos = JSON.parse(responseFinanceCo.toString());
+
+        //iterate through the list of members in the memberList.json file
         for (let member of startupFile.members) {
 
             console.log('\nmember.id: ' + member.id);
@@ -99,61 +99,61 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             console.log('member.companyName: ' + member.companyName);
             console.log('member.pw: ' + member.pw);
 
-            var transaction = 'Register' + member.type;
-            console.log('transaction: ' + transaction);            
+            let transaction = 'Register' + member.type;
+            console.log('transaction: ' + transaction);
 
-            for (let buyer of buyers) { 
-                if (buyer == member.id) {
-                    res.send({'error': 'member id already exists'});
+            for (let buyer of buyers) {
+                if (buyer === member.id) {
+                    res.send({error: 'member id already exists'});
                 }
             }
-            for (let seller of sellers) { 
-                if (seller == member.id) {
-                    res.send({'error': 'member id already exists'});
+            for (let seller of sellers) {
+                if (seller === member.id) {
+                    res.send({error: 'member id already exists'});
                 }
             }
-            for (let provider of providers) { 
-                if (provider == member.id) {
-                    res.send({'error': 'member id already exists'});
+            for (let provider of providers) {
+                if (provider === member.id) {
+                    res.send({error: 'member id already exists'});
                 }
             }
-            for (let shipper of shippers) { 
-                if (shipper == member.id) {
-                    res.send({'error': 'member id already exists'});
+            for (let shipper of shippers) {
+                if (shipper === member.id) {
+                    res.send({error: 'member id already exists'});
                 }
             }
-            for (let financeCo of financeCos) { 
-                if (financeCo == member.id) {
-                    res.send({'error': 'member id already exists'});
+            for (let financeCo of financeCos) {
+                if (financeCo === member.id) {
+                    res.send({error: 'member id already exists'});
                 }
             }
-                        
+
             //register a buyer, seller, provider, shipper, financeCo
             const response = await contract.submitTransaction(transaction, member.id, member.companyName);
-            console.log('transaction response: ')
-            console.log(JSON.parse(response.toString()));  
-                                            
-            console.log('Next');                
+            console.log('transaction response: ');
+            console.log(JSON.parse(response.toString()));
 
-        } 
-        
+            console.log('Next');
+
+        }
+
         // iterate through the order objects in the memberList.json file.
         for (let each in startupFile.items){(function(_idx, _arr){itemTable.push(_arr[_idx]);})(each, startupFile.items);}
         svc.saveItemTable(itemTable);
 
         let allOrders = new Array();
 
-        console.log('Get all orders'); 
-        for (let buyer of buyers) { 
+        console.log('Get all orders');
+        for (let buyer of buyers) {
             const buyerResponse = await contract.evaluateTransaction('GetState', buyer);
-            var _buyerjsn = JSON.parse(JSON.parse(buyerResponse.toString()));       
-            
-            for (let orderNo of _buyerjsn.orders) {                 
-                allOrders.push(orderNo);            
-            }                           
+            let _buyerjsn = JSON.parse(buyerResponse.toString());
+
+            for (let orderNo of _buyerjsn.orders) {
+                allOrders.push(orderNo);
+            }
         }
 
-        console.log('Go through all orders'); 
+        console.log('Go through all orders');
         for (let order of startupFile.assets) {
 
             let _tmp = svc.addItems(order, itemTable);
@@ -167,30 +167,30 @@ exports.autoLoad = async function autoLoad(req, res, next) {
             console.log('items: ' + items);
             console.log('amount: ' + amount);
 
-            for (let orderNo of allOrders) { 
-                if (orderNo == order.id) {
-                    res.send({'error': 'order already exists'});
+            for (let orderNo of allOrders) {
+                if (orderNo === order.id) {
+                    res.send({error: 'order already exists'});
                 }
-            }            
+            }
 
             const createOrderResponse = await contract.submitTransaction('CreateOrder', order.buyer, order.seller, financeCoID, order.id, items, amount);
-            console.log('createOrderResponse: ')
+            console.log('createOrderResponse: ');
             console.log(JSON.parse(createOrderResponse.toString()));
 
             console.log('Next');
-                      
+
         }
-        
+
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         console.log('AutoLoad Complete');
         await gateway.disconnect();
-        res.send({'result': 'Success'});
+        res.send({result: 'Success'});
 
     } catch (error) {
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
-        res.send({'error': error.message});
+        res.send({error: error.message});
     }
 
 };

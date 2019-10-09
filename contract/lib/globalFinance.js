@@ -271,7 +271,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order status
-        if (order.status == JSON.stringify(orderStatus.Created)) {
+        if (order.status === JSON.stringify(orderStatus.Created)) {
             order.status = JSON.stringify(orderStatus.Bought);
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
 
@@ -322,7 +322,7 @@ class GlobalFinance extends Contract {
         }
 
         //update order
-        if (order.status == JSON.stringify(orderStatus.Created) || order.status == JSON.stringify(orderStatus.Bought) || order.status == JSON.stringify(orderStatus.Backordered)  ) {
+        if (order.status === JSON.stringify(orderStatus.Created) || order.status === JSON.stringify(orderStatus.Bought) || order.status === JSON.stringify(orderStatus.Backordered)  ) {
             order.status = JSON.stringify(orderStatus.Cancelled);
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
             return JSON.stringify(order);
@@ -368,7 +368,7 @@ class GlobalFinance extends Contract {
         }
 
         //update order
-        if (order.status == JSON.stringify(orderStatus.Bought) ) {
+        if (order.status === JSON.stringify(orderStatus.Bought) ) {
             order.providerId = providerId;
             order.status = JSON.stringify(orderStatus.Ordered);
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
@@ -419,7 +419,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order
-        if (order.status == JSON.stringify(orderStatus.Ordered) || order.status == JSON.stringify(orderStatus.Backordered) ) {
+        if (order.status === JSON.stringify(orderStatus.Ordered) || order.status === JSON.stringify(orderStatus.Backordered) ) {
 
             order.shipperId = shipperId;
             order.status = JSON.stringify(orderStatus.ShipRequest);
@@ -460,7 +460,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order
-        if (order.status == JSON.stringify(orderStatus.ShipRequest) || order.status.code == JSON.stringify(orderStatus.Delivering.code) ) {
+        if (order.status === JSON.stringify(orderStatus.ShipRequest) || order.status.code === JSON.stringify(orderStatus.Delivering.code) ) {
 
             let _status = orderStatus.Delivering;
             _status.text += '  '+deliveryStatus;
@@ -498,7 +498,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order
-        if (order.status == JSON.stringify(orderStatus.ShipRequest) || (JSON.parse(order.status).code == JSON.stringify(orderStatus.Delivering.code)) ) {
+        if (order.status === JSON.stringify(orderStatus.ShipRequest) || (JSON.parse(order.status).code === JSON.stringify(orderStatus.Delivering.code)) ) {
 
             order.status = JSON.stringify(orderStatus.Delivered);
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
@@ -544,7 +544,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order
-        if ((JSON.parse(order.status).text == orderStatus.Delivered.text) || (JSON.parse(order.status).text == orderStatus.Resolve.text)) {
+        if ((JSON.parse(order.status).text === orderStatus.Delivered.text) || (JSON.parse(order.status).text === orderStatus.Resolve.text)) {
 
             order.status = JSON.stringify(orderStatus.PayRequest);
 
@@ -592,7 +592,7 @@ class GlobalFinance extends Contract {
         }
 
         //update order
-        if ((JSON.parse(order.status).text == orderStatus.PayRequest.text ) || (JSON.parse(order.status).text == orderStatus.Resolve.text )) {
+        if ((JSON.parse(order.status).text === orderStatus.PayRequest.text ) || (JSON.parse(order.status).text === orderStatus.Resolve.text )) {
 
             order.status = JSON.stringify(orderStatus.Authorize);
 
@@ -639,7 +639,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order
-        if (JSON.parse(order.status).text == orderStatus.Authorize.text ) {
+        if (JSON.parse(order.status).text === orderStatus.Authorize.text ) {
 
             order.status = JSON.stringify(orderStatus.Paid);
 

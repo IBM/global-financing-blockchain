@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/IBM/global-financing-blockchain.svg?branch=master)](https://travis-ci.org/IBM/global-financing-blockchain)
+
 *Read this in other languages: [日本語](README-ja.md)* 
 
 # Global financing with blockchain
@@ -19,6 +21,7 @@ When you have completed this code pattern, you will understand how to:
 * Package and deploy the smart contract to a local instance of Hyperledger Fabric using IBM Blockchain Platform Extension for VS Code
 * Develop a Node.js blockchain web application to interact with the deployed Fabric network
 
+**Note: For deploying the smart contract to IBM Blockchain Platform (on IBM Cloud) instead, follow [this code pattern](https://developer.ibm.com/patterns/build-a-global-finance-application-on-blockchain/).**
 
 # Architecture flow
 

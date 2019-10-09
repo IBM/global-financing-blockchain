@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/IBM/global-financing-blockchain.svg?branch=master)](https://travis-ci.org/IBM/global-financing-blockchain)
+
 # Global financing with blockchain
 
 ブロックチェーンテクノロジを使用したグローバルファイナンスアプリケーションは、購入者、販売者、プロバイダ、荷送人、および金融会社など、ネットワークのさまざまなメンバーによる注文に対するアクションを追跡します。 これらのアクションは次のとおりです。
