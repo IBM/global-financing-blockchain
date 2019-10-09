@@ -226,6 +226,37 @@ Unified member's view:
   <img width="1000" src="docs/doc-images/app-unified-view.png">
 </div>
 
+## トラブルシューティング
+
+* もしこのようなエラーが発生した場合:
+`error: [Remote.js]: Error: Failed to connect before the deadline URL:grpc://localhost:17051
+error: [Network]: _initializeInternalChannel: Unable to initialize channel. Attempted to contact 1 Peers. Last error was Error: Failed to connect before the deadline URL:grpc://localhost:17051`
+
+このエラーは、connection.jsonファイルでオーダー/認証局/ peerに使用されているポートが、VS Code用のIBM Blockchain Platform Extensionのsettings.jsonファイルでデフォルトのポートとして指定されているものと同じではないために発生したものです。settings.jsonファイルに指定されているものと一致するように、connection.jsonファイル内のポートを更新する必要があります。
+
+左端にある歯車アイコンのボタンをクリックし、`Settings`を選択します。左側のナビゲーションパネル内の`Extensions`が展開され、"Settings"タブが新しく開き、`Blockchain configuration`を選択します。`Edit in settings.json`をクリックしてBlockchain platform extension用のsettings.jsonファイルを開きます。次のような内容が記載されていることが確認できると思います:
+```
+{
+    "ibm-blockchain-platform.fabric.runtime": {
+        "ports": {
+            "orderer": 17053,
+            "peerRequest": 17057,
+            "peerChaincode": 17058,
+            "peerEventHub": 17059,
+            "certificateAuthority": 17060,
+            "couchDB": 17061,
+            "logs": 17062
+        },
+        "developmentMode": false
+    },
+    "ibm-blockchain-platform.fabric.wallets": [],
+    "ibm-blockchain-platform.fabric.gateways": []
+}
+```
+
+あなたのプロジェクト用のconnection.jsonファイルの中のorderer、peerそしてCAポートをこのsettings.jsonファイルで指定された `orderer`、` peerRequest`そして `certificateAuthority`ポートに置き換えてください。
+
+
 ## このCode Patternの拡張
 このアプリケーションは、いくつかの方法で拡張できます。
 * すべてのメンバーのためのWalletを作成し、アプリケーションと対話するためにメンバーのWalletを使用してください。
