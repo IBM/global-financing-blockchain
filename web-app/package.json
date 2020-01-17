@@ -13,27 +13,27 @@
   "author": "IBM",
   "license": "Apache-2.0",
   "devDependencies": {
-    "browserfs": "^1.2.0",
-    "eslint": "^5.16.0",
+    "browserfs": "^1.4.3",
+    "eslint": "^6.8.0",
     "extend": "",
     "mkdirp": "^0.5.1"
   },
   "dependencies": {
-    "body-parser": "^1.18.1",
-    "cfenv": "^1.0.4",
+    "body-parser": "^1.19.0",
+    "cfenv": "^1.2.2",
     "connect-busboy": "0.0.2",
-    "cookie-parser": "^1.4.3",
-    "date-format": "",
-    "ejs": "",
-    "express": "^4.15.4",
-    "fabric-client": "^1.4.4",
-    "fabric-network": "~1.4.0",
+    "cookie-parser": "^1.4.4",
+    "date-format": "^3.0.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "fabric-client": "^1.4.5",
+    "fabric-network": "~1.4.5",
     "http": "0.0.0",
     "https": "^1.0.0",
-    "mime": "^2.0.2",
+    "mime": "^2.4.4",
     "os": "^0.1.1",
     "path": "^0.12.7",
-    "sleep": "^5.1.1",
-    "websocket": "^1.0.24"
+    "sleep": "^6.1.0",
+    "websocket": "^1.0.31"
   }
 }
