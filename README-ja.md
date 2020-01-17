@@ -20,10 +20,11 @@
 * VS Code用 IBM Blockchain Platform Extensionを使用し、スマートコントラクトをパッケージ化した、Hyperledger Fabric ローカルインスタンスへのデプロイ
 * デプロイされたFabricネットワークとやり取りするためのNode.jsブロックチェーンWebアプリケーションの開発
 
-# Architecture flow
+
+## Architecture flow
 
 <p align="center">
-  <img src="docs/doc-images/arch-flow.png">
+  <img src="https://user-images.githubusercontent.com/8854447/72633938-7ead0f00-3927-11ea-94af-7043d1c6ad53.png">
 </p>
 
 VS Code用のIBM Blockchain Platform Extensionを使用して、以下のことを行います。
@@ -34,20 +35,24 @@ VS Code用のIBM Blockchain Platform Extensionを使用して、以下のこと�
 1. ピアノードでチェーンコードをインスタンス化します。
 1. Global Financeアプリケーションを使って、 `fabric-network` npmライブラリを使ったAPI呼び出しを通してHyperledger Fabricネットワークとやり取りします。管理者はアプリケーションを使用して新しい参加者を作成することもできます。
 
-# Included components
+
+## Included components
 
 * [IBM Blockchain Platform Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform)  は、Hyperledger Fabric環境への接続を含む、スマートコントラクトの開発、テスト、および展開を支援するように設計されています。
 * [Hyperledger Fabric v1.4](https://hyperledger-fabric.readthedocs.io) は、高度な機密性、回復力、柔軟性、およびスケーラビリティを提供するモジュラーアーキテクチャーに支えられた分散型元帳ソリューションのプラットフォームです。
 * [Visual Studio Code](https://code.visualstudio.com/download) は、最新のWebおよびクラウドアプリケーションの構築およびデバッグ用に再定義および最適化されたコードエディタです。
+
 
 ## Featured technologies
 
 + [Node.js](https://nodejs.org/en/) は、サーバーサイドのJavaScriptコードを実行する、オープンソースのクロスプラットフォームのJavaScriptランタイム環境です。
 + [Bootstrap](https://getbootstrap.com/) は、HTML、CSS、およびJavaScriptで開発するためのオープンソースのツールキットです。
 
+
 ## Running the application
 
 このコードパターンを設定して実行するには、次の手順に従います。 ステップの詳細は以下のとおりです。
+
 
 ### Prerequisites
 
@@ -58,6 +63,7 @@ You will need to follow the requirements for the [IBM Blockchain Platform Extens
 - [Yeoman (yo) v2.x](http://yeoman.io/)
 - [Docker version v17.06.2-ce or greater](https://www.docker.com/get-docker)
 - [Docker Compose v1.14.0 or greater](https://docs.docker.com/compose/install/)
+
 
 ### Steps
 
@@ -79,20 +85,22 @@ git clone https://github.com/IBM/global-financing-blockchain.git
 
 Visual Studio Code を開き `contract` フォルダを開きます。
 
+
 ### スマートコントラクトをパッケージ化する
 
 VS Codeの他のオプションを見るために `F1` キーを押してください。
-その中から `IBM Blockchain Platform: Package a Smart Contract Project` を選択します。
+その中から `IBM Blockchain Platform: Package Open Project` を選択します。
 
 <p align="center">
-  <img src="docs/doc-images/vs-code-options.png">
+  <img src="https://user-images.githubusercontent.com/8854447/71910509-05036d00-3140-11ea-8b15-7c8aeb403974.png">
 </p>
 
 左側の `IBM Blockchain Platform` 拡張ボタンをクリックしてください。 これにより、パッケージ化されたコントラクトが一番上に表示され、ブロックチェーン接続が一番下に表示されます。
 
 <p align="center">
-  <img height="500" src="docs/doc-images/ibm-blockchain-extension.png">
+  <img height="500" src="https://user-images.githubusercontent.com/8854447/72377051-0f43df00-36dd-11ea-8e54-93c1d21f1853.png">
 </p>
+
 
 ### ローカルでファブリックを設定する
 
@@ -109,6 +117,7 @@ VS Codeの他のオプションを見るために `F1` キーを押してくだ�
 <p align="center">
   <img width="300" src="docs/doc-images/fabric-setup-output.png">
 </p>
+
 
 ### スマートコントラクトをインストールしてインスタンス化する
 
@@ -161,6 +170,7 @@ VS Codeの他のオプションを見るために `F1` キーを押してくだ�
   <img width="300" src="docs/doc-images/instantiated-smart-contract.png">
 </p>
 
+
 ### CAノードにIdentityを追加する
 
 GitHubからCloneしたソースコードの中にIdentityの情報や認証に使用する鍵ファイルも含まれていますが、ご自身の環境に合わせ書き換える（置き換える）必要があります。先ずは、CAノードにIdentityを追加します。
@@ -175,6 +185,7 @@ GitHubからCloneしたソースコードの中にIdentityの情報や認証に�
 <p align="center">
   <img width="300" src="docs/doc-images/added_pic02.png">
 </p>
+
 
 ### Walletをエクスポートする
 
@@ -199,6 +210,7 @@ GitHubからCloneしたファイルが既に存在していますので、それ
 
 これで、アプリケーションからブロックチェーンネットワークへの認証が可能になりました。
 
+
 ## 3. アプリケーションの実行
 
 新しいターミナルで `web-app` ディレクトリへ移動します:
@@ -218,13 +230,14 @@ GitHubからCloneしたファイルが既に存在していますので、それ
   ```
 
 <div style='border: 2px solid #f00;'>
-  <img width="1000" src="docs/doc-images/app-view.png">
+  <img width="1000" src="https://user-images.githubusercontent.com/8854447/72450728-d5c8ad80-3788-11ea-83c4-1f0cf1c8e432.png">
 </div>
 
 Unified member's view:
 <div style='border: 2px solid #f00;'>
-  <img width="1000" src="docs/doc-images/app-unified-view.png">
+  <img width="1000" src="https://user-images.githubusercontent.com/8854447/72450727-d5c8ad80-3788-11ea-8b40-549187431d33.png">
 </div>
+
 
 ## トラブルシューティング
 
@@ -262,10 +275,12 @@ error: [Network]: _initializeInternalChannel: Unable to initialize channel. Atte
 * すべてのメンバーのためのWalletを作成し、アプリケーションと対話するためにメンバーのWalletを使用してください。
 * IBM Cloud上のIBM Blockchain Platformスターター・プランを通じて対話するようにアプリケーションを更新します。
 
+
 ## 関連リンク
 * [Hyperledger Fabric Docs](http://hyperledger-fabric.readthedocs.io/en/latest/)
 * [Zero to Blockchain](https://www.redbooks.ibm.com/Redbooks.nsf/RedbookAbstracts/crse0401.html?Open)
 * [IBM Code Patterns for Blockchain](https://developer.ibm.com/patterns/category/blockchain/)
+
 
 ## ライセンス
 このCode Patternは、Apache Software License、Version 2の下でライセンスされています。このCode Pattern内で呼び出される個別のサードパーティコードオブジェクトは、それぞれのプロバイダによって、独自の個別のライセンスに従ってライセンスされています。
