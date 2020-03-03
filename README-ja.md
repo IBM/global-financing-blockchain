@@ -20,8 +20,11 @@
 * VS Code用 IBM Blockchain Platform Extensionを使用し、スマートコントラクトをパッケージ化した、Hyperledger Fabric ローカルインスタンスへのデプロイ
 * デプロイされたFabricネットワークとやり取りするためのNode.jsブロックチェーンWebアプリケーションの開発
 
+**Note: 注：スマートコントラクトを代わりにIBM Blockchain Platform（IBM Cloud上）にデプロイするには、この [コードパターン](https://developer.ibm.com/patterns/build-a-global-finance-application-on-blockchain/) に従ってください.**
 
-## Architecture flow
+
+
+## アーキテクチャフロー
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/8854447/72633938-7ead0f00-3927-11ea-94af-7043d1c6ad53.png">
@@ -36,27 +39,27 @@ VS Code用のIBM Blockchain Platform Extensionを使用して、以下のこと�
 1. Global Financeアプリケーションを使って、 `fabric-network` npmライブラリを使ったAPI呼び出しを通してHyperledger Fabricネットワークとやり取りします。管理者はアプリケーションを使用して新しい参加者を作成することもできます。
 
 
-## Included components
+## 含まれるコンポーネント
 
 * [IBM Blockchain Platform Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=IBMBlockchain.ibm-blockchain-platform)  は、Hyperledger Fabric環境への接続を含む、スマートコントラクトの開発、テスト、および展開を支援するように設計されています。
 * [Hyperledger Fabric v1.4](https://hyperledger-fabric.readthedocs.io) は、高度な機密性、回復力、柔軟性、およびスケーラビリティを提供するモジュラーアーキテクチャーに支えられた分散型元帳ソリューションのプラットフォームです。
 * [Visual Studio Code](https://code.visualstudio.com/download) は、最新のWebおよびクラウドアプリケーションの構築およびデバッグ用に再定義および最適化されたコードエディタです。
 
 
-## Featured technologies
+## 注目のテクノロジー
 
 + [Node.js](https://nodejs.org/en/) は、サーバーサイドのJavaScriptコードを実行する、オープンソースのクロスプラットフォームのJavaScriptランタイム環境です。
 + [Bootstrap](https://getbootstrap.com/) は、HTML、CSS、およびJavaScriptで開発するためのオープンソースのツールキットです。
 
 
-## Running the application
+## アプリケーションの実行
 
 このコードパターンを設定して実行するには、次の手順に従います。 ステップの詳細は以下のとおりです。
 
 
-### Prerequisites
+### 前提条件
 
-You will need to follow the requirements for the [IBM Blockchain Platform Extension for VS Code](https://github.com/IBM-Blockchain/blockchain-vscode-extension/blob/master/README.md#requirements):
+下記 [IBM Blockchain Platform Extension for VS Code](https://github.com/IBM-Blockchain/blockchain-vscode-extension/blob/master/README.md#requirements) の要件に従う必要があります:
 
 - [VSCode version 1.38.0 or greater](https://code.visualstudio.com)
 - [Node v8.x or v10.x and npm v6.x or greater](https://nodejs.org/en/download/)
@@ -64,7 +67,7 @@ You will need to follow the requirements for the [IBM Blockchain Platform Extens
 - [Docker Compose v1.14.0 or greater](https://docs.docker.com/compose/install/)
 
 
-### Steps
+### ステップ
 
 1. [Clone the repo](#1-clone-the-repo)
 2. [Use the VS Code extension to set up a smart contract on a basic Fabric network](#2-use-the-vs-code-extension-to-set-up-a-smart-contract-on-a-basic-fabric-network)
@@ -104,110 +107,129 @@ VS Codeの他のオプションを見るために `F1` キーを押してくだ�
 ### ローカルでファブリックを設定する
 
 `LOCAL FABRIC OPS` のメニューをクリックし `Start Fabric Runtime` を選択してネットワークを起動します。 これにより、ローカルのFabric設定に必要なDockerイメージがダウンロードされ、ネットワークが起動します。 ネットワークが設定されると、出力ウィンドウが表示されます。
+エディターの左側に `FABRIC ENVIRONMENTS` が表示されます。 このセクションの下に `Local Fabric` が表示されます。 それをクリックして、ローカルファブリックを起動します。
 
 <p align="center">
-  <img width="500" src="docs/doc-images/start-fabric.png">
+  <img height="500" src="https://user-images.githubusercontent.com/8854447/72295829-54f1a080-3626-11ea-8977-7dafef591eb6.png">
 </p>
 
-これで `LOCAL FABRIC OPS` の下に、スマートコントラクトをインストールしてインスタンス化するためのオプション、あなたの `Channels` の情報、 `Nodes` の下のピア、そして `Organizations` の下の organization msp が表示されます。
-※MSP(メンバーシップ・サービス・プロバイダ)については [こちら](https://cloud.ibm.com/docs/services/blockchain?topic=blockchain-ibp-console-organizations#ibp-console-organizations) をご覧ください。
-
+拡張機能は、ネットワーク内のノードとして機能するDockerコンテナーをプロビジョニングします。 プロビジョニングが完了し、ネットワークが稼働すると、スマートコントラクトをインストールしてインスタンス化するオプション、 `Channels` の情報、 `Nodes` の下のピア、そして `Organizations` の下の organization msp が表示されます。 これで、スマートコントラクトをインストールする準備ができました。
 
 <p align="center">
-  <img width="300" src="docs/doc-images/fabric-setup-output.png">
+  <img height="500" src="https://user-images.githubusercontent.com/8854447/72297496-0ba35000-362a-11ea-9f37-e5819b0dd751.png">
 </p>
 
 
 ### スマートコントラクトをインストールしてインスタンス化する
 
-`LOCAL FABRIC OPS` コンソールの `Installed` ドロップダウンの下にある `+Install` をクリックしてください。
+#### インストール
 
-こちらのピアを選択します: `peer0.org1.example.com`.
+*下部にある `FABRIC ENVIRONMENTS` セクションで、 `Smart Contracts` > `Installed` > `+ Install` をクリックします。 次の図のようなポップアップが表示されます。
 
 <p align="center">
-  <img width="500" src="docs/doc-images/choose-peer.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72640815-a9529400-3936-11ea-9257-f021aa8438c5.png">
 </p>
 
-`globalfinancing@0.0.1` コントラクトを選択します:
+*次に、パッケージ化されたコントラクトを選択します：`globalfinancing@0.0.1 Packaged` **注** 0.0.1は、 `package.json` からです。　Line: ` "version"： "0.0.1" `
+
+インストールが完了すると、 `Successfully installed on peer peer0.org1.example.com` というメッセージが表示されます。 また、contractが `FABRIC ENVIRONMENTS` の下の `Installed` の下にリストされていることを確認してください。
 
 <p align="center">
-  <img width="500" src="docs/doc-images/choose-smart-contract.png">
+  <img width="300" src="https://user-images.githubusercontent.com/8854447/72640898-d737d880-3936-11ea-9d60-ad6629c148e6.png">
 </p>
 
-スマートコントラクトのインストールが成功したことの通知と `LOCAL FABRIC OPS` コンソールの `Installed` の下にリストされているスマートコントラクトが表示されます。
+#### インスタンス化
+
+* **Smart Contracts** の下に、 **Instantiated** というセクションが表示されます。 その下の `+ Instantiate` をクリックします。
+
+* Extensionは、インスタンス化するコントラクトとバージョンを尋ねます。 `globalfinancing@0.0.1 Installed` を選択します。
 
 <p align="center">
-  <img width="300" src="docs/doc-images/installed-smart-contract.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72640977-03ebf000-3937-11ea-8945-dc9e53ded253.png">
 </p>
 
-これでスマートコントラクトをインスタンス化する準備が整いました。
-`LOCAL FABRIC OPS` コンソールの `Instantiated` ドロップダウンの下の `+Instantiate` をクリックしてください。
-
-こちらのチャネルを選択します: `my channel`.
+* Extensionは、インスタンス化時に呼び出す関数を尋ねます。 `instantiate` と入力します
 
 <p align="center">
-  <img width="500" src="docs/doc-images/choose-channel.png">
+  <img width="500" width="300" src="https://user-images.githubusercontent.com/8854447/72641008-149c6600-3937-11ea-9598-43004c3d8b76.png">
 </p>
 
-`globalfinancing@0.0.1` コントラクトを選択します:
+* 次に、関数の引数を尋ねます。 ここでは引数は不要なので、何も入力せずにエンターキーを押してください。
 
 <p align="center">
-  <img width="500" src="docs/doc-images/choose-instantiate-contract.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72641072-43b2d780-3937-11ea-8cbc-ab4e757367d1.png">
 </p>
 
-関数に `instantiate` と入力します:
+* 次に、Extensionは、プライベートデータコレクションの構成ファイルを提供するかどうかを尋ねます。 `No` をクリックします。
 
 <p align="center">
-  <img width="500" src="docs/doc-images/enter-instantiate.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72641080-4a414f00-3937-11ea-8f2b-37b85090fd6c.png">
 </p>
 
-オプションの引数については **Enter** を押すことができます。
-
-これがうまくインスタンス化されると、アウトプットビューに成功した通知とあなたの `LOCAL FABRIC OPS` コンソールの `Instantiated` の下にリストされたスマートコントラクトが見えるはずです。
+* 最後に、Extensionはスマートコントラクトのエンドースメントポリシーを選択するかどうかを尋ねます。 `Default (single endorser, any org)` を選択します。
 
 <p align="center">
-  <img width="300" src="docs/doc-images/instantiated-smart-contract.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72641101-53322080-3937-11ea-89f8-4db2f23a8b27.png">
+</p>
+
+コントラクトのインスタンス化が完了すると、 `Successfully instantiated smart contract` というメッセージが表示され、 `FABRIC ENVIRONMENTS` の下の `Instantiated` の下に `globalfinancing@0.0.1` が表示されます。
+
+<p align="center">
+  <img width="300" src="https://user-images.githubusercontent.com/8854447/72641288-c63b9700-3937-11ea-85cf-ceae22ffcf85.png">
 </p>
 
 
 ### CAノードにIdentityを追加する
 
-GitHubからCloneしたソースコードの中にIdentityの情報や認証に使用する鍵ファイルも含まれていますが、ご自身の環境に合わせ書き換える（置き換える）必要があります。先ずは、CAノードにIdentityを追加します。
-`LOCAL FABRIC OPS` コンソールの `Nodes` ドロップダウンの下の `ca.org1.example.com` を右クリックして `Create Identity` を選択してください。表示された入力ボックスに `User1@org1.example.com` を入力しEnterを押します。
+ここで、CA（認証局）ノードを使用してidentityを作成します。 アプリケーションを認証して実行するには、identity情報とキーファイルが必要です。
+
+左側のペインの `FABRIC ENVIRONMENTS` セクションで、 `Nodes` を展開し、 `ca.org1.example.com` を右クリックします。 `Create Identity（register and enroll）` を選択します。
 
 <p align="center">
-  <img width="500" src="docs/doc-images/added_pic01.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72641326-e53a2900-3937-11ea-84a6-785f11a6cbe6.png">
 </p>
 
-すると `FABRIC WALLETS` コンソールの `local_fabric_wallet` の配下に `User1@org1.example.com` が追加されたのが確認できます。
+表示された入力ボックスに `User1@org1.example.com` を入力しEnterを押します。
 
 <p align="center">
-  <img width="300" src="docs/doc-images/added_pic02.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72641663-a3f64900-3938-11ea-823a-2021c7860f63.png">
+</p>
+
+Extensionは、このidentityに属性を追加するかどうかを尋ねます。 `No` をクリックします。
+
+<p align="center">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72641770-e455c700-3938-11ea-8358-ada659c4b26a.png">
+</p>
+
+Once the identity is successfully created, you should get the message `Successfully created identity 'User1@org1.example.com'`. You can now see `User1@org1.example.com` in the `FABRIC WALLETS` section under `Local Fabric Wallet`.
+identityが正常に作成されると、 `Successfully created identity 'User1@org1.example.com'` というメッセージが表示されます。 これで、 `Local Fabric Wallet` の下の `FABRIC WALLETS` セクションに `User1@org1.example.com` が表示されます。
+
+<p align="center">
+  <img width="300" src="https://user-images.githubusercontent.com/8854447/72641825-03ecef80-3939-11ea-9e1e-70bf3b88242e.png">
 </p>
 
 
 ### Walletをエクスポートする
 
-追加したIdentityの情報をアプリケーションが認証に使えるようにするため、VS CodeのExtensionからWalletをエクスポートします。エクスポート先は任意の場所で結構です。ここではデスクトップに一旦保存しています。
+`FABRIC WALLETS` の下で、 `Local Fabric Wallet` を右クリックし、 `Export Wallet` を選択します。
 
 <p align="center">
-  <img width="300" src="docs/doc-images/added_pic03.png">
-</p>
-<p align="center">
-  <img width="500" src="docs/doc-images/added_pic04.png">
+  <img width="300" src="https://user-images.githubusercontent.com/8854447/72641899-31399d80-3939-11ea-86ff-3e1de927416d.png">
 </p>
 
-アプリケーションが認証処理で参照するディレクトリに、エクスポートしたファイルをコピーします。対象のディレクトリは以下になります。
-GitHubからCloneしたファイルが既に存在していますので、それらは削除して下さい。
+エクスポート先は任意の場所で結構です。 
+
+エクスポートされたディレクトリから、 `User1 @ org1.example.com` のフォルダを、このリポジトリを複製したディレクトリ内の次の場所にコピーします。
+
   ```
   /global-financing-blockchain/web-app/controller/restapi/features/fabric/_idwallet/User1@org1.example.com
   ```
 
 <p align="center">
-  <img width="500" src="docs/doc-images/added_pic06.png">
+  <img width="500" src="https://user-images.githubusercontent.com/8854447/72642245-e5d3bf00-3939-11ea-9deb-e7a68c5aec41.png">
 </p>
 
-これで、アプリケーションからブロックチェーンネットワークへの認証が可能になりました。
+これでアプリケーションを実行する準備が整いました。
 
 
 ## 3. アプリケーションの実行
