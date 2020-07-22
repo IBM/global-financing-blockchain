@@ -498,7 +498,7 @@ class GlobalFinance extends Contract {
         }
 
         // update order
-        if (order.status === JSON.stringify(orderStatus.ShipRequest) || (JSON.parse(order.status).code === JSON.stringify(orderStatus.Delivering.code)) ) {
+        if (order.status === JSON.stringify(orderStatus.ShipRequest) || (JSON.parse(order.status).code === orderStatus.Delivering.code) ) {
 
             order.status = JSON.stringify(orderStatus.Delivered);
             await ctx.stub.putState(orderNumber, Buffer.from(JSON.stringify(order)));
